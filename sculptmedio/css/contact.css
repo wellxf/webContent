@@ -1,0 +1,39 @@
+.slide.page-heading { background-color: #665A98; padding-bottom: 70px}
+
+
+.slide.google-map-canvas { height:600px; border:1px solid #EEEEEE}
+
+.office-address { position: absolute; right:40px; top:360px; z-index:1000;width:409px; background-color: #fff; border:1px solid #cccccc;-webkit-box-shadow: 2px 2px 5px 5px rgba(0,0,0,0.1);
+box-shadow: 2px 2px 5px 5px rgba(0,0,0,0.1);}
+.office-address .image { height:245px; overflow: hidden;}
+.office-address .content { padding:20px 25px}
+.office-address .content h3 {  font-size:24px; margin:0 0 8px 0; padding:0; line-height: 32px;color:#724987}
+.office-address .content span { display: block; font-size:15px; padding:1px 0; color:#000}
+.office-address .content span a { color: #000}
+.office-address .content span a:hover{color:#724987}
+
+.map-popup {width:370px; min-height:120px; padding:12px;font-size:15px !important}
+.map-popup strong{ font-size:20px; font-weight:normal;}
+
+
+.contact-form .btn-submit{ background-color: #665A98; color:#fff;}
+.contact-form .btn-submit:hover {background-color: #5b5b5b; color:#fff;}
+
+
+.slide.footer .col3 a:hover{ background-color: #665A98; border-color:#665A98;color:#fff}
+
+
+@media (max-width: 640px) {
+	.slide.page-heading .container {padding-left:20px; padding-right: 20px}
+	.slide.page-heading h1 { font-size:29px}
+	.slide.page-heading p { font-size:14px; line-height: 19px;}
+	.slide.google-map-canvas { height:300px;}
+	.office-address { position:static; width:auto; min-width:100% !important;left:auto; right:auto;top:auto; box-shadow:none; -webkit-box-shadow:none; border:0}
+	.office-address .image img {min-width: 100%}
+}
+
+
+@media (max-width: 1100px) {
+	.office-address { width:300px}
+}
+

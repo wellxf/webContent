@@ -1,0 +1,1 @@
+!function(n){n(function(){n("#signOutToken").length&&n("#signOutToken").val(n("meta[name=csrf-token]").prop("content"))})}(jQuery);

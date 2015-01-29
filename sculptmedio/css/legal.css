@@ -1,0 +1,10 @@
+.slide.page-heading { background-color: #77BCC8; padding:150px 40px 100px 40px}
+.slide.page-heading h1 { color:#fff; display: block;}
+
+.slide.profile strong { color:#56949E}
+
+/* Tablet and Phone */
+@media (max-width: 800px) {
+	
+
+}

@@ -1,0 +1,65 @@
+.slide.page-heading { background-color: #FF7C6D; padding:140px 0 70px 0}
+.slide.page-heading h3 { color:#fff; font-size:39px;display: block; margin:0 auto;}
+.slide.page-heading h2 { font-size:26px; color:#fff;display: block; margin:2px auto 0 auto}
+
+.slide.services { border-bottom: 1px solid rgba(0,0,0,0.1); padding-top:40px;padding-bottom:40px}
+.slide.services .description h2 { color:#5b5b5b;font-size:30px;}
+.slide.services .description h5 { color:000; font-size:16px;}
+.slide.services .description td strong, .slide.services .description strong  { color:#ED6455}
+.slide.services .description li { list-style: none; margin-left:2px; background:url(../images/icon-bullet.png) no-repeat left 6px; padding-left:12px; padding-bottom: 4px; display: block;}
+.slide.services .description ul.twoCol li { float:left; width:45%}
+
+.slide.services .circle img { float: left; width:85%; height: 85%}
+.slide.services .circle span{position:absolute;left:50%;top:50%;margin-left:-60px;margin-top:-55px;width:120px;height:110px;display:block;background:url(../images/sprite-services-icons.png) no-repeat -5px -3px}
+
+.slide.services .circle span.ui-ux-design  { background-position: -1622px -3px;}
+.slide.services .circle span.motion-design { background-position: -141px -3px;}
+.slide.services .circle span.web-development { background-position: -277px -2px;}
+.slide.services .circle span.e-commerce { background-position: -412px -3px;}
+.slide.services .circle span.creative { background-position: -546px 0;}
+.slide.services .circle span.social-media { background-position: -682px -3px;}
+.slide.services .circle span.seo { background-position: -815px -1px;}
+.slide.services .circle span.content-writing { background-position: -947px -1px;}
+.slide.services .circle span.product-restructuring{ background-position: -1089px top;}
+.slide.services .circle span.web-hosting { background-position: -1222px -2px;}
+.slide.services .circle span.photography { background-position: -1358px -4px;}
+.slide.services .circle span.email-marketing { background-position: -1492px -1px;}
+
+
+.slide.services .description .btn { margin-top:25px;background-color: #FF7362; color:#fff;opacity: 0; visibility: hidden; -webkit-transition: visibility 0.2s linear, opacity 0.2s linear; -moz-transition: visibility 0.2s linear, opacity 0.2s linear; -o-transition: visibility 0.2s linear, opacity 0.2s linear; }
+.slide.services .description .btn:hover{ background-color: #5b5b5b}
+.slide.services .description:hover .btn { visibility: visible; opacity: 1;}
+
+.slide.footer .col3 a:hover{ background-color: #FF7362; border-color:#FF7362;color:#fff}
+
+
+/* Tablet and Phone */
+@media (max-width: 1024px) {
+	.slide.services .description ul.twoCol li { float:none; width:100%}
+	.slide.services .description .btn{visibility: visible; opacity: 1; display: block;}
+
+}
+
+@media (max-width: 640px) {
+
+	.slide.page-heading .container {padding-left:20px; padding-right: 20px}
+	.slide.page-heading h3{ font-size:24px;}
+	.slide.page-heading h2 { font-size:15px;}
+	
+	.slide.services { padding:30px 0}
+	.slide.services .circle { margin:0 auto}
+	
+	
+}
+
+
+
+
+
+
+@media (min-width: 690px) and (max-width: 1024px) {
+	.slide.page-heading { padding-left:20px; padding-right: 20px}
+	.slide.page-heading h3 { font-size:32px}
+	.slide.page-heading h2{font-size:20px}
+	.slide.services .description .btn{display:inline-block;}
+}
