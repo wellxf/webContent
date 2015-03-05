@@ -10,7 +10,7 @@
 .slide.services .description ul.twoCol li { float:left; width:45%}
 
 .slide.services .circle img { float: left; width:85%; height: 85%}
-.slide.services .circle span{position:absolute;left:50%;top:50%;margin-left:-60px;margin-top:-55px;width:120px;height:110px;display:block;background:url(../images/sprite-services-icons.png) no-repeat -5px -3px}
+
 
 .slide.services .circle span.ui-ux-design  { background-position: -1622px -3px;}
 .slide.services .circle span.motion-design { background-position: -141px -3px;}
