@@ -6,7 +6,7 @@
 .slide.services .description h2 { color:#5b5b5b;font-size:30px;}
 .slide.services .description h5 { color:000; font-size:16px;}
 .slide.services .description td strong, .slide.services .description strong  { color:#ED6455}
-.slide.services .description li { list-style: none; margin-left:2px; background:url(../images/icon-bullet.png) no-repeat left 6px; padding-left:12px; padding-bottom: 4px; display: block;}
+
 .slide.services .description ul.twoCol li { float:left; width:45%}
 
 .slide.services .circle img { float: left; width:85%; height: 85%}
