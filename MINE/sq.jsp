@@ -3,7 +3,7 @@
 <html>
 <head>
 
-<title>Spring MVC Tutorial Series by Crunchify.com</title>
+<title>挖藕科技产品查询</title>
 <style type="text/css">
 body {
 	background-image: url('http://crunchify.com/bg.png');
