@@ -15,8 +15,8 @@ body {
 	<div style="text-align: center">
 		<h1>
 			您的产品序列号是 <b><%=request.getParameter("sn")%></b>!<br> <br>
-			是正版授权产品<br>
-			请将序列号发给小编，由我们的客服为您处理。<br>
+			你购买的是由“挖藕”生产的智能控制器，是正版授权产品<br>
+			稍后可将产品序列号发给小编，然后由我们的客服帮您答疑解难。<br>
 		</h1>
 		<img src="images/smile-face.png" alt="^_^">
 	</div>
