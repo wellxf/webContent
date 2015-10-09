@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>空气净化器</title>
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<link rel="stylesheet" type="text/css"
+	href="http://qzonestyle.gtimg.cn/op_mt_proj/qq-controller/index.css" />
+</head>
+<body>
+	<div class="cleaner" id="device_opened" style="display: none">
+		<div class="cleaner-data" id="options_top">
+			<div class="topbar">
+				<i class="ico-close" id="device_close"></i>
+				<p class="quality" style="display: none">
+					空气指数<span class="q-level">优良</span>
+				</p>
+			</div>
+			<div class="main-des">
+				<div class="main-des-item">
+					<div class="c-wrapper">
+						<p class="humidity-tit">湿度</p>
+						<p class="humidity-num number">
+							<span id="shidu">-</span><span class="sub">%</span>
+						</p>
+					</div>
+				</div>
+				<div class="main-des-item">
+					<p class="temprature number">
+						<span id="wendu">-</span><span class="sub">C<i
+							class="ico-degree"></i></span>
+					</p>
+				</div>
+			</div>
+			<div id="options_scroller" class="cleaner-items-wrapper"></div>
+		</div>
+		<div class="fengsu">
+			<div class="control-des">风速</div>
+			<div class="control-item">
+				<div class="m-slider" id="options_slider">
+					<span class="left">低</span>
+					<div class="ui-slider-wrapper">
+						<div class="ui-slider">
+							<div class="inner" style="width: 0%;"></div>
+							<i class="ico-circle" style="left: 0%;"></i>
+						</div>
+					</div>
+					<span class="right">高</span>
+				</div>
+			</div>
+		</div>
+		<div class="controls" id="options_switcher"></div>
+	</div>
+	<div class="entrance" id="device_closed" style="display: none;">
+		<a class="btn-enter" id="device_open"><i class="ico-entrance"></i></a><span
+			class="ft-tip">设备未开启</span>
+	</div>
+	<script>document.write('<script type="text/javascript" src="http://qzonestyle.gtimg.cn/open/mobile/light_app/js/iscroll.js?max_age=31104000&v=20141205"><\/script>');document.write('<script type="text/javascript" src="http://qzonestyle.gtimg.cn/open/mobile/light_app/js/device.js?max_age=604800&v=20150619"><\/script>');</script>
+	<script>function Slider(a){this.slider=document.querySelector("#"+a.id+" .ui-slider");this.progresser=document.querySelector("#"+a.id+" .ui-slider .inner");this.dot=document.querySelector("#"+a.id+" .ui-slider .ico-circle");this.progress=a.progress||0;this.last_progress=this.progress;this.getSliderWidth=function(){return parseInt(document.defaultView.getComputedStyle(document.querySelector("#"+a.id+" .ui-slider"),null).width)};this.handlerEnd=a.handlerEnd;this._init()}Slider.prototype={_init:function(){var a=this,f=this.slider,h=this.progresser,c=this.dot;h.style.width=this.progress*100+"%";c.style.left=this.progress*100+"%";var d={x:0,y:0},b={x:0,y:0},e=false;c.addEventListener("touchstart",function(i){i.preventDefault();e=true;d.x=b.x=i.touches[0].pageX;d.y=b.y=i.touches[0].pageY});c.addEventListener("touchend",function(i){e=false;a.last_progress=a.progress;a.handlerEnd&&a.handlerEnd(a)});f.addEventListener("touchmove",function(i){i.preventDefault();if(e){b.x=i.touches[0].pageX;b.y=i.touches[0].pageY;var j=(b.x-d.x)/a.getSliderWidth();a.setProgress(a.last_progress+j,true)}});var g=f.parentNode;g.addEventListener("touchstart",function(i){if(i.target.classList.contains("ico-circle")){return}var j=g.getBoundingClientRect().left,k=(i.touches[0].pageX-j)/a.getSliderWidth();a.setProgress(k);a.handlerEnd&&a.handlerEnd(a)})},setProgress:function(a,b){a=Math.max(0,Math.min(a,1))||0;this.progresser.style.width=a*100+"%";this.dot.style.left=a*100+"%";this.progress=a;!b&&(this.last_progress=this.progress)}};var getUrlParam=function(c,d,e){var f=new RegExp("(?:^|[?&#])"+c+"=([^?&#]*)","i"),a=f.exec(d||window.location.href),b=a?a[1]:"";return e?b:decodeURIComponent(b)},ping=function(b){var a=document.createElement("img");a.onload=a.onerror=function(){a=null};a.src=b;setTimeout(function(){},1000)},hotClick=function(c,a,b){if(!c){return}a=a||"sng.qq.com";b=b||window.location.pathname;var d=["http://pinghot.qq.com/pingd?dm=",a,".hot&url=",b,"&hottag=",c,"&hotx=9999&hoty=9999&sds=",Math.random()].join("");ping(d)},pv=function(d,b,a){var e=function(i,j,g){var m=/(?:^|;+|\s+)pgv_pvid=([^;]*)/i,n=/(?:^|;+|\s+)pgv_info=([^;]*)/i,o=/[\?\#]/,p=function(){var r,s,u,v;r=document.cookie.match(m);r&&r.length&&r.length>1?s=r[1]:(s=Math.round(Math.random()*2147483647)*(new Date().getUTCMilliseconds())%10000000000,document.cookie="pgv_pvid="+s+"; path=/; domain=qq.com; expires=Sun, 18 Jan 2038 00:00:00 GMT;");u=document.cookie.match(n);!u&&(v=Math.round(Math.random()*2147483647)*(new Date().getUTCMilliseconds())%10000000000,document.cookie="pgv_info=ssid=s"+v+"; path=/; domain=qq.com;");return s}();i=i||location.hostname||"-";j=j||location.pathname;g=g||{};g.referURL=g.referURL||document.referrer;var h,k,l;h=g.referURL.split(o);h=h[0];h=h.split("/");k=h[2]||"-";l="/"+h.slice(3).join("/");g.referDomain=g.referDomain||k;g.referPath=g.referPath||l;var q="http://pingfore.qq.com/pingd?cc=-&ct=-&java=1&lang=-&pf=-&scl=-&scr=-&tt=-&tz=-8&vs=3.3&flash=&dm="+i+"&url="+j+"&rdm="+g.referDomain+"&rurl="+g.referPath+"&pgv_pvid="+p+"&sds="+Math.random();ping(q)};a=a||{};var c=getUrlParam("from");if(c){b=b||location.pathname;var f=b.replace(/\..+/,"").split("/").slice(-2).join("-");a.referDomain="ADTAG";a.referPath=f+"."+c}e(d,b,a)};window.TMPL=window.TMPL||{};function escHTML(a){if(!a){return a}var b=document.createElement("div");b.innerHTML="";b.appendChild(document.createTextNode(a));return b.innerHTML}function $d(a){return typeof a=="string"?document.getElementById(a):a}function $(a){return document.querySelector(a)}function $$(a){return document.querySelectorAll(a)}function $child(a,b){return a.querySelector(b)}function $$child(a,b){return a.querySelectorAll(b)}function $each(a,b){[].forEach.call(a,b)}function getUrlParam(c,d,e){var f=new RegExp("(?:^|[?&#])"+c+"=([^?&#]*)","i"),a=f.exec(d||window.location.href),b=a?a[1]:"";return e?b:decodeURIComponent(b)}function serializeParam(b){var a=[];for(var c in b){a.push(encodeURIComponent(c)+"="+encodeURIComponent(b[c]))}a=a.concat([].slice.call(arguments,1));return a.join("&")}function getCookie(b){var c=new RegExp("(?:^|;+|\\s+)"+b+"=([^;]*)"),a=document.cookie.match(c);return a?a[1]:""}function setCookie(c,d,e,f,a){if(a){var b=new Date();b.setTime(b.getTime()+3600000*a)}var g=a?"expires="+b.toGMTString()+"; ":"",h="path="+(f||"/")+"; ",i="domain="+(e||document.domain)+";";document.cookie=c+"="+d+"; "+g+h+i}function delCookie(a,b,c){var d="expires=Mon, 26 Jul 1997 05:00:00 GMT; ",e="path="+(c||"/")+"; ",f="domain="+(b||document.domain)+";";document.cookie=a+"=; "+d+e+f}function getUin(){var a=getCookie("uin").match(/\d+/);return a?+a[0]:0}function getType(b){return null===b?"null":void 0===b?"undefined":Object.prototype.toString.call(b).slice(8,-1).toLowerCase()}function split2Object(g,d,a,e){var f={},c,b,h,k;if(!g||typeof g!="string"){return f}(typeof d!="string"||getType(d)!="regexp")&&(d=/[?&#]/);typeof a!="string"&&(a="");typeof e!="string"&&(e="=");c=g.split(d);if(c&&c.length){for(var j=0,m=c.length;j<m;++j){b=c[j].split(e);b.length>1?(k=b.slice(1).join(e),h=k.split(a),f[b[0]]=h.slice(a.length,h.length-a.length).join(a)):b[0]&&(f[b[0]]=true)}}return f}TMPL.options_switcher=function(b){with(b||{}){var a=[];isSupport("fulizifasheng")&&a.push('<div class="control-item"><div class="m-switch"><span>负离子发生</span><div class="_switcher ui-switcher" id="fulizifasheng"><i class="ico-circle"></i></div></div></div>');isSupport("chouyangfasheng")&&a.push('<div class="control-item"><div class="m-switch"><span>臭氧发生</span><div class="_switcher ui-switcher" id="chouyangfasheng"><i class="ico-circle"></i></div></div></div>');isSupport("jingyan")&&a.push('<div class="control-item"><div class="m-switch"><span>净烟</span><div class="_switcher ui-switcher" id="jingyan"><i class="ico-circle"></i></div></div></div>');isSupport("jiashi")&&a.push('<div class="control-item"><div class="m-switch"><span>加湿</span><div class="_switcher ui-switcher" id="jiashi"><i class="ico-circle"></i></div></div></div>');return a.join("")}};TMPL.options_scroller=function(b){with(b||{}){var a=[];a.push('<div class="cleaner-items" style="width:45rem;">');isSupport("pm25")&&a.push('<div class="cleaner-item"><p class="ci-tit">PM2.5</p><p class="ci-num number" id="pm25">-</p></div>');isSupport("jiaquan")&&a.push('<div class="cleaner-item"><p class="ci-tit">甲醛</p><p class="ci-num number" id="jiaquan">-</p></div>');isSupport("co2kongqi")&&a.push('<div class="cleaner-item"><p class="ci-tit">CO2空气</p><p class="ci-num number" id="co2kongqi">-</p></div>');isSupport("youjiwu")&&a.push('<div class="cleaner-item"><p class="ci-tit">有机物</p><p class="ci-num number" id="youjiwu">-</p></div>');isSupport("lvwanggengxin")&&a.push('<div class="cleaner-item"><p class="ci-tit">滤网更新</p><p class="ci-num number" id="lvwanggengxin">-</p></div>');a.push("</div>");return a.join("")}};window.MAIN=function(){var c={daijiqidong:{id:500001,apiName:"set_data_point",type:"int32",value:0},fengshantiaosu:{id:500002,apiName:"set_data_point",type:"int32",value:0},wendu:{id:500003,type:"int32",value:0},shidu:{id:500004,type:"int32",value:0},fulizifasheng:{id:500008,apiName:"set_data_point",type:"int32",value:0},chouyangfasheng:{id:500005,apiName:"set_data_point",type:"int32",value:0},jingyan:{id:500006,apiName:"set_data_point",type:"int32",value:0},jiashi:{id:500007,apiName:"set_data_point",type:"int32",value:0},pm25:{id:500009,type:"int32",value:0},jiaquan:{id:500010,type:"int32",value:0},co2kongqi:{id:500011,type:"int32",value:0},youjiwu:{id:500012,type:"int32",value:0},lvwanggengxin:{id:500013,type:"int32",value:0}},g=[],h=null,k=function(){setTimeout(function(){$("html").style.fontSize=10*(window.innerWidth/320)+"px"},0)},a=function(r){return g.indexOf(r)>-1},d=function(s){for(var r in c){if(c[r].id==s){return r}}},e=function(r,s){c[r].value=s;device.send({datapoint:[c[r]],vibrate:1,onSuccess:function(t){},onError:function(t){}})},i=function(s,r){switch(s){case"daijiqidong":b(r);break;case"fengshantiaosu":h.setProgress([0,0,0.5,1][r]||0);break;case"wendu":case"shidu":case"pm25":case"jiaquan":case"co2kongqi":case"youjiwu":case"lvwanggengxin":l(s,r);break;case"fulizifasheng":case"chouyangfasheng":case"jingyan":case"jiashi":f(s,r);break}},j=0,b=function(r,s){s&&e("daijiqidong",r);+r?($("#device_closed").style.display="none",$("#device_opened").style.display="",!j&&(m(),n(),j=1)):($("#device_opened").style.display="none",$("#device_closed").style.display="")},f=function(s,t,u){u&&e(s,t);var r=$d(s);r&&(+t?r.className+=" on":r.className=r.className.replace(" on",""))},l=function(r,s){$d(r)&&($d(r).innerHTML=s)},m=function(){var r=a("pm25")+a("jiaquan")+a("co2kongqi")+a("youjiwu")+a("lvwanggengxin");r?($("#options_scroller").innerHTML=TMPL.options_scroller({isSupport:a}),setTimeout(function(){$("#options_scroller .cleaner-item").getBoundingClientRect().width*r>window.innerWidth?($("#options_scroller >div").style.width="45rem",new iScroll("options_scroller",{vScroll:false,hScroll:true,vScrollbar:false,hScrollbar:false,bounce:true,momentum:true,lockDirection:true,onScrollEnd:function(){}})):$("#options_scroller >div").style.width="32rem"},0)):$("#options_top").className+=" no-other"},n=function(){h=new Slider({id:"options_slider",handlerEnd:function(s){var r=0;s.progress<1/3?r=1:s.progress<2/3?r=2:r=3;e("fengshantiaosu",r)}})},o=function(){$("#options_switcher").innerHTML=TMPL.options_switcher({isSupport:a});$each($$("._switcher"),function(r){r.addEventListener("click",function(s){this.className.indexOf(" on")>-1?f(this.id,0,true):f(this.id,1,true)},false)})},p=function(){b(0);device.onReceive(function(s){i(d(s.id),s.value)});device.onChange(function(s){(s.online==0||s.unbind)&&b(0)});+getUrlParam("online");var r=getUrlParam("ids").split(",");r.forEach(function(s){g.push(d(s))});device.query({list:r,interval:5000,onSuccess:function(s){s.list.forEach(function(t){i(d(t.id),t.val_list[0].val)})},onError:function(s){}});o();$("#device_open").addEventListener("click",function(s){b(1,true)},false);$("#device_close").addEventListener("click",function(s){b(0,true)},false)},q=function(){window.addEventListener("load",function(){k()},false);p();pv("iot.qq.com")};return{init:q}}();</script>
+	<script>window.MAIN&&window.MAIN.init();</script>
+</body>
+</html>
+<!--[if !IE]>|xGv00|5e8c67ff072ab6a089355d1c078014f6<![endif]-->
