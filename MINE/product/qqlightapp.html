@@ -173,7 +173,7 @@
         </div>
         
         <div id="foot">
-            <input class="input" id="inputTextBox" placeholder="点击文字辅助输入" onClick="clickInputTextBox()"></input>
+            <input class="input" id="inputTextBox" placeholder="点击文字辅助输入" onClick="enterInputMode()" onblur="outInputMode()"></input>
             <button class="sendButton" id="sendButton" onClick="clickSendButton()">发送</button>
         </div>
     </div>
@@ -184,9 +184,15 @@
             document.getElementById("inputTextBox").value = obj.innerHTML;
         }
         
-        function clickInputTextBox() {
-        	alert("xx");
+        function enterInputMode() {
         	window.scrollTo(0,0);
+        	var o=document.getElementById("middle");
+        	o.style.display = 'none';
+        }
+        
+        function outInputMode() {
+        	var o=document.getElementById("middle");
+            o.style.display = 'block';
         }
         
         function clickSwitchButton() {
