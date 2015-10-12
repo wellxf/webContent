@@ -51,6 +51,8 @@
         	position: absolute;
         	width: 100%;
         	height: 50%;
+            border-style: none;
+            border-radius:12px;
         }
         
         div#middle {
@@ -112,6 +114,7 @@
         .switchButton {
         	width: 160px;
         	height: 160px;
+            top: 10px;
         	background: url(http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png) no-repeat center center;
         	background-size: cover;
             border-radius:80px;
@@ -138,17 +141,15 @@
         
         .line1 {
             position: absolute;
-            left: 30px;
+            left: 35px;
             color: gray;
-            font-family: inherit;
-            font-size: 20px;
+            font-size: 18px;
         }
         .line2 {
             position: absolute;
-            right: 30px;
+            right: 35px;
             color: gray;
-            font-family: inherit;
-            font-size: 20px;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -172,7 +173,7 @@
         </div>
         
         <div id="foot">
-            <input class="input" id="inputTextBox" placeholder="点击文字辅助输入"></input>
+            <input class="input" id="inputTextBox" placeholder="点击文字辅助输入" onClick="clickInputTextBox()"></input>
             <button class="sendButton" id="sendButton" onClick="clickSendButton()">发送</button>
         </div>
     </div>
@@ -181,6 +182,11 @@
         device.debug = true;
         function clickLine(obj) {
             document.getElementById("inputTextBox").value = obj.innerHTML;
+        }
+        
+        function clickInputTextBox() {
+        	alert("xx");
+        	window.scrollTo(0,0);
         }
         
         function clickSwitchButton() {
