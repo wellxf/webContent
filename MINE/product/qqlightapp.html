@@ -65,6 +65,8 @@
             vertical-align:middle ;
             over-flow: hidden;
             display:inline-block; 
+            
+            align: center;
         }
         
         div#foot {
@@ -109,16 +111,16 @@
             background-color: #FFF;
             border-style: none;
             border-radius:4px;
+            margin:auto;
         }
         
         .switchButton {
         	width: 160px;
         	height: 160px;
-            top: 10px;
         	background: url(http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png) no-repeat center center;
         	background-size: cover;
             border-radius:80px;
-            border-style:none
+            border-style:none;
         }
         
         .switchButton:hover {
@@ -128,6 +130,7 @@
             padding:3px 3px 3px 3px;
             margin:1px;
             text-decoration:none;
+            border-radius:80px;
         }
         
         .switchButton:active {
@@ -137,6 +140,7 @@
             padding:4px 2px 2px 4px;
             margin:1px;
             text-decoration:none;
+            border-radius:80px;
         }
         
         .line1 {
@@ -169,11 +173,11 @@
         </div>
         
         <div id="middle">
-            <button class="switchButton" id="switchButton" align="center" onClick="clickSwitchButton()" ></button>
+            <button class="switchButton" id="switchButton"  onClick="clickSwitchButton()" ></button>
         </div>
         
         <div id="foot">
-            <input class="input" id="inputTextBox" placeholder="点击文字辅助输入" onClick="enterInputMode()" onblur="outInputMode()"></input>
+            <input class="input" id="inputTextBox" placeholder="可以点击页面上的文字进行输入" onClick="enterInputMode()" onblur="outInputMode()"></input>
             <button class="sendButton" id="sendButton" onClick="clickSendButton()">发送</button>
         </div>
     </div>
