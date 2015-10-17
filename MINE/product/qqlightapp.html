@@ -37,8 +37,9 @@
         	position: absolute;
         	height: 400px;
             width: 600px;
-            border-style: none;
             border-radius:12px;
+            border-style: solid;
+            border-width: 0px 0px 1px 0px;
         }
         
         div#middle {
@@ -142,16 +143,113 @@
             color: gray;
             font-size: 28px;
         }
-                
+        
+         /* bubble style */
+        .sender {
+            clear:both;
+        }
+        .sender div:nth-of-type(1) {
+            float: left;
+        }
+        .sender div:nth-of-type(2) {
+            background-color: #DDDDDD;
+            float: left;
+            margin: 0 20px 10px 15px;
+            padding: 20px 20px 20px 0px;
+            border-radius:7px;
+            font-size: 28px;
+        }
+        .receiver div:first-child img, .sender div:first-child img {
+            width:50px;
+            height: 50px;
+        }
+        .receiver {
+            clear:both;
+        }
+        .receiver div:nth-child(1) {
+            float: right;
+        }
+        .receiver div:nth-of-type(2) {
+            float:right;
+            background-color: #DDDDDD;
+            margin: 0 10px 10px 20px;
+            padding: 10px 0px 10px 10px;
+            border-radius:7px;
+            font-size: 28px;
+        }
+        .left_triangle {
+            height:0px;
+            width:0px;
+            border-width:8px;
+            border-style:solid;
+            border-color:transparent #DDDDDD transparent transparent;
+            position: relative;
+            left:-16px;
+            top:3px;
+        }
+        .right_triangle {
+            height:0px;
+            width:0px;
+            border-width:8px;
+            border-style:solid;
+            border-color:transparent transparent transparent #DDDDDD;
+            position: relative;
+            right:-16px;
+            top:3px;
+        }       
     </style>
 </head>
 
 <body>
     <div id="container">
         <div id="head">
+            <div class="sender">
+                <div>
+                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-yong.png">
+                </div>
+                <div>
+                    <div class="left_triangle"></div> <span> 我是主卧灯，您可以直接发信息给我。 </span> 
+                </div>
+            </div>
+            <!-- Right -->
+            <div class="receiver">
+                <div>
+                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png">
+                </div>
+                <div>
+                    <div class="right_triangle"></div> <span> 半小时后关灯 </span> 
+                </div>
+            </div>
             
-            <br/><br/><br/>
+            <div class="sender">
+                <div>
+                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-yong.png">
+                </div>
+                <div>
+                    <div class="left_triangle"></div> <span> 好的。 </span> 
+                </div>
+            </div>
+            <!-- Right -->
+            <div class="receiver">
+                <div>
+                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png">
+                </div>
+                <div>
+                    <div class="right_triangle"></div> <span> 不要关了 </span> 
+                </div>
+            </div>
+            
+            <div class="sender">
+                <div>
+                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-yong.png">
+                </div>
+                <div>
+                    <div class="left_triangle"></div> <span> 好的。 </span> 
+                </div>
+            </div>
         </div>
+        
+        
         
         <div id="middle">
             <button class="switchButton" id="switchButton"  onClick="clickSwitchButton()" ></button>
