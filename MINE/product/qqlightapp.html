@@ -102,8 +102,8 @@
         }
         
         .switchButton {
-        	width: 280px;
-        	height: 280px;
+        	width: 320px;
+        	height: 320px;
         	background: url(http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png) no-repeat center center;
         	background-size: cover;
             border-radius:80px;
@@ -142,29 +142,30 @@
             color: gray;
             font-size: 28px;
         }
+                
     </style>
 </head>
 
 <body>
     <div id="container">
         <div id="head">
-            <h2 id="line1" class="line1" onClick="clickLine(this)">半小时后关灯</h2>
+            
             <br/><br/><br/>
-            <h2 id="line2" class="line2" onClick="clickLine(this)">关闭呼吸灯</h2>
-            <br/><br/><br/>
-            <h2 id="line2" class="line1" onClick="clickLine(this)">明早6点开灯</h2>
-            <br/><br/><br/>
-            <h2 id="line2" class="line2" onClick="clickLine(this)">每天晚上6点到8点开灯</h2>
-            <br/><br/><br/>
-            <h2 id="line2" class="line1" onClick="clickLine(this)">12点关灯</h2>
         </div>
         
         <div id="middle">
             <button class="switchButton" id="switchButton"  onClick="clickSwitchButton()" ></button>
         </div>
         
-        <div id="foot">
-            <input class="input" id="inputTextBox" placeholder="可以点击页面上的文字进行输入" onClick="enterInputMode()" onblur="outInputMode()"></input>
+        <div id="foot" >
+            <datalist id="browsers">
+              <option value="半小时后关灯">
+              <option value="关闭呼吸灯">
+              <option value="明早6点开灯">
+              <option value="每天晚上6点到8点开灯">
+              <option value="12点关灯">
+            </datalist>
+            <input class="input"  list="browsers" type="text" id="inputTextBox" placeholder="点击进行辅助输入"; onClick="enterInputMode()" onblur="outInputMode()"></input>
             <button class="sendButton" id="sendButton" onClick="clickSendButton()">发送</button>
         </div>
     </div>
@@ -205,7 +206,7 @@
         	
         	var o = document.getElementById("inputTextBox");
         	o.value = "";
-        	o.placeholder = "可以点击页面上的文字进行输入";
+        	o.placeholder = "点击进行辅助输入";
         	
             device.send({
                 datapoint: [{
