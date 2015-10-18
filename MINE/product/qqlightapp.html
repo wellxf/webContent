@@ -147,7 +147,8 @@
         
          /* bubble style */
         .sender {
-            clear:both;
+            clear:both;            
+            padding: 30px 0px 0px 0px;
         }
         .sender div:nth-of-type(1) {
             float: left;
@@ -155,8 +156,8 @@
         .sender div:nth-of-type(2) {
             background-color: #DDDDDD;
             float: left;
-            margin: 0 20px 10px 15px;
-            padding: 20px 20px 20px 0px;
+            margin: 0 10px 10px 15px;
+            padding: 10px 10px 10px 0px;
             border-radius:7px;
             font-size: 28px;
         }
@@ -173,7 +174,7 @@
         .receiver div:nth-of-type(2) {
             float:right;
             background-color: #DDDDDD;
-            margin: 0 10px 10px 20px;
+            margin: 0 10px 10px 15px;
             padding: 10px 0px 10px 10px;
             border-radius:7px;
             font-size: 28px;
@@ -213,9 +214,11 @@
             <datalist id="allGuideMessage">
               <option value="半小时后关灯">
               <option value="关闭呼吸灯">
+              <option value="打开呼吸灯">
               <option value="明早6点开灯">
-              <option value="每天晚上6点到8点开灯">
+              <option value="晚上6点到8点开灯">
               <option value="12点关灯">
+              <option value="胡说八戒">
             </datalist>
             <input class="input"  list="allGuideMessage" type="text" id="inputTextBox" placeholder="点击进行辅助输入" oninput="inputTextChange()"></input>
             <button class="sendButton" id="sendButton" disabled="disabled" onClick="clickSendButton()">发送</button>
@@ -223,7 +226,7 @@
     </div>
     <script>
         function clickLine(obj) {
-            document.getElementById("inputTextBox").value = obj.innerHTML;
+            document.getElementById("inputTextBox").value = obj;
             document.getElementById( "sendButton" ).removeAttribute("disabled");
         }
         
@@ -258,41 +261,307 @@
         	});
         }
         
-        function pushMessageIntoHeadPanel( value ) {
+        function pushMessageIntoHeadPanel( type, value ) {
         	 var head = document.getElementById("head");  
-             head.appendChild( createSender(value) );
+        	 if ( type == "sender" ) {
+        		 head.appendChild( createSender(value) );	 
+        	 } else if ( type == "receiver"){
+        		 head.appendChild( createReceiver(value) );
+        	 }
+        	 
+        	 head.scrollTop = head.scrollHeight;
         }
         
-        function clickSendButton() {
+        function isNum(s)
+        {
+            if (s!=null && s!="")
+            {
+                return !isNaN(s);
+            }
+            return false;
+        }
+        
+        function changeChineseToNumber( time ) {
         	
-        	var o = document.getElementById("inputTextBox");
+        	if ( isNum( time ) ) {
+        		return Number(time);
+        	}
         	
-        	pushMessageIntoHeadPanel( o.value );
+        	if ( time == "半" ) {
+                time = 0.5;
+            } else if ( time == "一" ) {
+            	time = 1;
+            } else if ( time == "二" ) {
+                time = 2;
+            } else if ( time == "三" ) {
+                time = 3;
+            } else if ( time == "四" ) {
+                time = 4;
+            } else if ( time == "五" ) {
+                time = 5;
+            } else if ( time == "六" ) {
+                time = 6;
+            } else if ( time == "七" ) {
+                time = 7;
+            } else if ( time == "八" ) {
+                time = 8;
+            } else if ( time == "九" ) {
+                time = 9;
+            } else if ( time == "十" ) {
+                time = 10;
+            } else if ( time == "十一" ) {
+                time = 11;
+            } else if ( time == "十二" ) {
+                time = 12;
+            } else if ( time == "十三" ) {
+                time = 13;
+            } else if ( time == "十四" ) {
+                time = 14;
+            } else if ( time == "十五" ) {
+                time = 15;
+            } else if ( time == "十六" ) {
+                time = 16;
+            } else if ( time == "十七" ) {
+                time = 17;
+            } else if ( time == "十八" ) {
+                time = 18;
+            } else if ( time == "十九" ) {
+                time = 19;
+            } else if ( time == "二十" ) {
+                time = 20;
+            } else if ( time == "二十一" ) {
+                time = 21;
+            } else if ( time == "二十二" ) {
+                time = 22;
+            } else if ( time == "二十三" ) {
+                time = 23;
+            } else if ( time == "二十四" ) {
+                time = 24;
+            } else if ( time == "二十五" ) {
+                time = 25;
+            } else if ( time == "二十六" ) {
+                time = 26;
+            } else if ( time == "二十七" ) {
+                time = 27;
+            } else if ( time == "二十八" ) {
+                time = 28;
+            } else if ( time == "二十九" ) {
+                time = 29;
+            } else if ( time == "三十" ) {
+                time = 30;
+            } else {
+            	setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "晕，这个数也太大了吧，你确定不是在戏弄我？" );
+            	time = -1;
+            }
         	
-        	o.value = "";
-        	o.placeholder = "点击进行辅助输入";
+        	return time;
+        }
+        
+        function sendDelayMessage( value ) {
         	
+        	var pos = value.indexOf( "小时" );
+        	var time = 0;
+        	if ( pos > 0 ) {
+        		time = value.substring( 0, pos );
+        		time = changeChineseToNumber( time );
+        		time = time * 60;
+        	} else {
+        		pos = value.indexof( "分钟" );
+        		if ( pos > 0 ) {
+        			time = value.subString( 0, pos );
+        			time = changeChineseToNumber( time );
+        		}
+        	}
+        	
+        	var state = 0;
+        	if ( value.indexOf( "开" ) > 0 ) {
+        		state = 1;
+        	}
+        	
+        	if ( time > 0 ) {
+        		device.send({
+                    datapoint: [{
+                        id: 500002,
+                        apiName: 'delay_switch',
+                        type: 'bytearray',
+                        value: [time,state]
+                    }],
+                    vibrate: 1,
+                    onSuccess: function(ret) {
+                        device.log('delay_switch onSuccess: ' + JSON.stringify(ret));
+                        pushMessageIntoHeadPanel( "receiver", "好的!" );
+                    },
+                    onError: function(ret) {
+                        device.log('onError: ' + JSON.stringify(ret));
+                    }
+                });
+        	}
+            
+        }
+        
+        function sendBreathLightMessage( value ) {
+        	var posTimeStringEnd = value.indexOf( "开" );
+            var state = 1;
+            if ( posTimeStringEnd < 0 ) {
+                state = 0;
+            }
             device.send({
                 datapoint: [{
-                    id: 500002,
-                    apiName: 'on_time_switch',
-                    type: 'bytearray',
-                    value: 1
+                    id: 500004,
+                    apiName: 'breath_light_switch',
+                    type: 'int32',
+                    value: state
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
-                    device.log('onSuccess: ' + JSON.stringify(ret));
+                    device.log('delay_switch onSuccess: ' + JSON.stringify(ret));
+                    pushMessageIntoHeadPanel( "receiver", "好的!" );
                 },
                 onError: function(ret) {
                     device.log('onError: ' + JSON.stringify(ret));
                 }
             });
         }
+        
+        function sendOnTimeSwitchMessage( value ) {
+        	var posTimeStringBegin = value.indexOf( "下午" );
+
+            var add12 = false;
+        	if ( posTimeStringBegin < 0 ) {
+        		posTimeStringBegin = value.indexOf( "晚上" );
+        	}
+        	if ( posTimeStringBegin >= 0 ) {
+               add12 = true;
+            } else {
+            	posTimeStringBegin = value.indexOf( "早上" );
+            	if ( posTimeStringBegin < 0 ) {
+            		posTimeStringBegin = value.indexOf( "上午" );
+            	}
+            	if ( posTimeStringBegin < 0 ) {
+                    posTimeStringBegin = value.indexOf( "早晨" );
+                }
+            } 
+        	//alert( posTimeStringBegin );
+        	if ( posTimeStringBegin >= 0 ) {
+        		posTimeStringBegin = posTimeStringBegin + 2;
+        	} else {
+        		//没写下午什么什么，直接就是几点到几点
+        		posTimeStringBegin = 0;
+        	}
+        	
+        	var posTimeStringEnd = value.indexOf( "打开" );
+        	var state = 1;
+        	if ( posTimeStringEnd < 0 ) {
+        		posTimeStringEnd = value.indexOf( "关" );
+        		state = 0;
+        	}
+        	
+        	if ( posTimeStringEnd < 0 ) {
+        		//不是打开，不是关，那就是开灯
+                posTimeStringEnd = value.indexOf( "开" );
+            }
+        	
+        	var timeString = value.substring(posTimeStringBegin,posTimeStringEnd);
+        	//alert( posTimeStringBegin + "," +  posTimeStringEnd +  "," + timeString );
+        	var midStringPos = timeString.indexOf( "到" );
+        	var timeBegin = timeString.substring(0, timeString.indexOf("点") );
+        	timeBegin = changeChineseToNumber( timeBegin );
+        	if ( timeBegin < 12 && add12 ) {
+        		timeBegin = timeBegin + 12;
+        	}
+        	
+        	timeString = timeString.substring( midStringPos + 1, timeString.length );
+        	
+        	var timeEnd = timeString.substring(0, timeString.indexOf("点") );
+        	timeEnd = changeChineseToNumber( timeEnd );
+        	if ( timeEnd < 12 && add12 ) {
+        		timeEnd = timeEnd + 12;
+            }
+        	
+        	//alert( timeBegin + "," + timeEnd );
+        	
+        	var myDate = new Date();
+        	var hour = myDate.getHours();
+        	var minute = myDate.getMinutes();
+        	
+        	device.send({
+                datapoint: [{
+                    id: 500003,
+                    apiName: 'on_time_switch',
+                    type: 'bytearray',
+                    value: [hour,minute,timeBegin,timeEnd,state]
+                }],
+                vibrate: 1,
+                onSuccess: function(ret) {
+                    device.log('on_time_switch onSuccess: ' + JSON.stringify(ret));
+                    pushMessageIntoHeadPanel( "receiver", "收到!" );
+                },
+                onError: function(ret) {
+                    device.log('onError: ' + JSON.stringify(ret));
+                }
+            });
+        }
+        
+        function isDelaySwitchMessage( value ) {
+        	var r = new RegExp("后");
+            return r.test( value );
+        }
+        
+        function isOnTimeSwitchMessage( value ) {
+        	var r = new RegExp("到");
+            return r.test( value );
+        }
+        
+        function isBreathLightControlMessage( value ) {
+            var r = new RegExp("到");
+            return r.test( value );
+        }
+        
+        function inputisValid( value ) {
+        	var r = new RegExp("开|关|打开|关闭|开灯|关灯");
+        	return r.test( value );
+        }
+        
+        function isBreathLightControlMessage( value ) {
+            var r = new RegExp("呼吸灯");
+            return r.test( value );
+        }
+        
+        function clickSendButton() {
+        	
+        	var o = document.getElementById("inputTextBox");
+        	
+        	var sendValue = o.value;
+        	pushMessageIntoHeadPanel( "sender", sendValue );
+        	
+        	o.value = "";
+        	o.placeholder = "点击进行辅助输入";
+        	
+        	var ret = inputisValid( sendValue);
+        	
+        	if ( !inputisValid( sendValue) ) {
+        		setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "我暂时理解不了您说的话" );
+        	} else {
+        		if ( isDelaySwitchMessage( sendValue) ) {
+        			sendDelayMessage( sendValue );
+        		} else if ( isOnTimeSwitchMessage( sendValue ) ) {
+        			sendOnTimeSwitchMessage( sendValue );
+        		} else if ( isBreathLightControlMessage( sendValue ) ) {
+        			 sendBreathLightMessage( sendValue );
+                } else {
+        			setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "我暂时理解不了您说的话，我会努力学习的。" );
+        		}
+        	}
+        }
     
     </script>
     <script src="http://qzonestyle.gtimg.cn/open/mobile/light_app/js/device.js"></script>
     <script>
         device.debug=true;  
+        //Could be on,off,unknown
+        switchCurrentState="unknown";
+        
+        
         function createReceiver( value ) {
         	var div = document.createElement("div");
         	
@@ -313,6 +582,7 @@
             triangleContainer.appendChild( triangle );
             triangle.className = "right_triangle";
             triangleContainer.innerHTML += "<span>" + value + "</span>";
+            
             
         	return div;
         }
@@ -337,8 +607,35 @@
             triangleContainer.appendChild( triangle );
             triangle.className = "left_triangle";
             triangleContainer.innerHTML += "<span>" + value + "</span>";
-            
+            triangleContainer.onclick = function() {
+                clickLine(value);
+            }
             return div;
+        }
+        
+        function getCurrentSwitchState() {
+        	device.query({
+        	    list: [500010],
+        	    onSuccess: function (ret) { // 查询成功回调
+        	        device.log('onSuccess: ' + JSON.stringify(ret));
+        	        ret.list.forEach(function (data) {
+        	            switch (data.id) {
+        	                case 500004:
+        	                    device.showToast(data.val_list[0].val);
+        	                    if ( data.val_list[0].val == 1 ) {
+        	                    	switchCurrentState = "on";
+        	                    } else {
+        	                    	switchCurrentState = "off";
+        	                    	device.log("现在开关是关闭状态")
+        	                    }
+        	                    break;
+        	            }
+        	        });
+        	    },
+        	    onError: function (ret) { // 查询失败回调
+        	        device.log('onError: ' + JSON.stringify(ret));
+        	    }
+        	});
         }
         
         window.onload = function() {      
@@ -348,7 +645,7 @@
             
             var m1 = createReceiver("点击输入框有提示");
             head.appendChild( m1 );
-            //messageArray.push( m1 );
+            getCurrentSwitchState();
         };
     </script>
     <!--[if !IE]>|xGv00|9905a873c2f7497c0c0cd7e24cc02554<![endif]-->
