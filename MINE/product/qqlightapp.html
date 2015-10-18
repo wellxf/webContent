@@ -9,9 +9,10 @@
     <meta name="viewport" content="width=600,  user-scalable=0" />
     <base />
     <style>
-        
+
         body {
         	font-family: "Microsoft Yahei", "\5FAE\8F6F\96C5\9ED1", arial, sans-serif;
+
         }
         
         * {
@@ -37,9 +38,9 @@
         	position: absolute;
         	height: 400px;
             width: 600px;
-            border-radius:12px;
             border-style: solid;
             border-width: 0px 0px 1px 0px;
+            overflow-y: scroll
         }
         
         div#middle {
@@ -202,54 +203,7 @@
 
 <body>
     <div id="container">
-        <div id="head">
-            <div class="sender">
-                <div>
-                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-yong.png">
-                </div>
-                <div>
-                    <div class="left_triangle"></div> <span> 我是主卧灯，您可以直接发信息给我。 </span> 
-                </div>
-            </div>
-            <!-- Right -->
-            <div class="receiver">
-                <div>
-                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png">
-                </div>
-                <div>
-                    <div class="right_triangle"></div> <span> 半小时后关灯 </span> 
-                </div>
-            </div>
-            
-            <div class="sender">
-                <div>
-                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-yong.png">
-                </div>
-                <div>
-                    <div class="left_triangle"></div> <span> 好的。 </span> 
-                </div>
-            </div>
-            <!-- Right -->
-            <div class="receiver">
-                <div>
-                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png">
-                </div>
-                <div>
-                    <div class="right_triangle"></div> <span> 不要关了 </span> 
-                </div>
-            </div>
-            
-            <div class="sender">
-                <div>
-                    <img src="http://wa-ou.com/resources/images/products/qqlightapp-yong.png">
-                </div>
-                <div>
-                    <div class="left_triangle"></div> <span> 好的。 </span> 
-                </div>
-            </div>
-        </div>
-        
-        
+        <div id="head"></div>
         
         <div id="middle">
             <button class="switchButton" id="switchButton"  onClick="clickSwitchButton()" ></button>
@@ -268,8 +222,6 @@
         </div>
     </div>
     <script>
-
-        device.debug = true;
         function clickLine(obj) {
             document.getElementById("inputTextBox").value = obj.innerHTML;
         }
@@ -303,6 +255,9 @@
         function clickSendButton() {
         	
         	var o = document.getElementById("inputTextBox");
+        	
+        	//pushMessageIntoHeadPanel( o.value );
+        	
         	o.value = "";
         	o.placeholder = "点击进行辅助输入";
         	
@@ -325,7 +280,66 @@
     
     </script>
     <script src="http://qzonestyle.gtimg.cn/open/mobile/light_app/js/device.js"></script>
-    <script>device.debug=true</script>
+    <script>
+        device.debug=true;  
+        function createReceiver( value ) {
+        	var div = document.createElement("div");
+        	
+        	div.className = "receiver";
+        	
+        	
+        	var imgDiv = document.createElement("div");
+        	var img = document.createElement("img");
+    
+            imgDiv.appendChild( img );
+        	img.src = "http://wa-ou.com/resources/images/products/qqlightapp-yong.png";
+        	div.appendChild( imgDiv );
+        	
+        	var triangleContainer = document.createElement("div");
+        	div.appendChild( triangleContainer );
+    
+            var triangle = document.createElement("div");
+            triangleContainer.appendChild( triangle );
+            triangle.className = "right_triangle";
+            triangleContainer.innerHTML += "<span>" + value + "</span>";
+            
+        	return div;
+        }
+        
+        function createSender( value ) {
+            var div = document.createElement("div");
+            
+            div.className = "sender";
+            
+            
+            var imgDiv = document.createElement("div");
+            var img = document.createElement("img");
+    
+            imgDiv.appendChild( img );
+            img.src = "http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png";
+            div.appendChild( imgDiv );
+            
+            var triangleContainer = document.createElement("div");
+            div.appendChild( triangleContainer );
+    
+            var triangle = document.createElement("div");
+            triangleContainer.appendChild( triangle );
+            triangle.className = "left_triangle";
+            triangleContainer.innerHTML += "<span>" + value + "</span>";
+            
+            return div;
+        }
+        
+        window.onload = function() {      
+            var head = document.getElementById("head");        
+            
+            head.appendChild( createReceiver("我是主卧灯，您可以直接发信息给我。") );
+            
+            var m1 = createReceiver("点击输入框有提示");
+            head.appendChild( m1 );
+            //messageArray.push( m1 );
+        };
+    </script>
     <!--[if !IE]>|xGv00|9905a873c2f7497c0c0cd7e24cc02554<![endif]-->
 </body>
 </html>
