@@ -6,7 +6,7 @@
     <meta itemprop="description" content="挖藕智能科技的qq物联轻app页面" />
     <meta itemprop="image" content="http://wa-ou.com/images/lightapp-logo.png" />
     <title>我的开关</title>
-    <meta name="viewport" content="width=600,  user-scalable=0" />
+    <meta name="viewport" content="width=600, minimum-scale=1.0, maximum-scale=1.0, target-densitydpi=device-dpi, user-scalable=0" />
     <base />
     <style>
 
@@ -217,17 +217,23 @@
               <option value="每天晚上6点到8点开灯">
               <option value="12点关灯">
             </datalist>
-            <input class="input"  list="allGuideMessage" type="text" id="inputTextBox" placeholder="点击进行辅助输入"></input>
-            <button class="sendButton" id="sendButton" onClick="clickSendButton()">发送</button>
+            <input class="input"  list="allGuideMessage" type="text" id="inputTextBox" placeholder="点击进行辅助输入" oninput="inputTextChange()"></input>
+            <button class="sendButton" id="sendButton" disabled="disabled" onClick="clickSendButton()">发送</button>
         </div>
     </div>
     <script>
         function clickLine(obj) {
             document.getElementById("inputTextBox").value = obj.innerHTML;
+            document.getElementById( "sendButton" ).removeAttribute("disabled");
         }
         
-        function enterInputMode() {
-            //window.scrollTo(0,0);
+        function inputTextChange() {
+        	var obj = document.getElementById( "inputTextBox" );
+            if ( obj.value != "" ) {
+            	document.getElementById( "sendButton" ).removeAttribute("disabled");
+            } else {
+            	document.getElementById( "sendButton" ).disabled = "disabled";
+            }
         }
         
         function outInputMode() {
@@ -252,11 +258,16 @@
         	});
         }
         
+        function pushMessageIntoHeadPanel( value ) {
+        	 var head = document.getElementById("head");  
+             head.appendChild( createSender(value) );
+        }
+        
         function clickSendButton() {
         	
         	var o = document.getElementById("inputTextBox");
         	
-        	//pushMessageIntoHeadPanel( o.value );
+        	pushMessageIntoHeadPanel( o.value );
         	
         	o.value = "";
         	o.placeholder = "点击进行辅助输入";
