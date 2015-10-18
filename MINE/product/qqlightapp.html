@@ -210,14 +210,14 @@
         </div>
         
         <div id="foot" >
-            <datalist id="browsers">
+            <datalist id="allGuideMessage">
               <option value="半小时后关灯">
               <option value="关闭呼吸灯">
               <option value="明早6点开灯">
               <option value="每天晚上6点到8点开灯">
               <option value="12点关灯">
             </datalist>
-            <input class="input"  list="browsers" type="text" id="inputTextBox" placeholder="点击进行辅助输入"; onClick="enterInputMode()" onblur="outInputMode()"></input>
+            <input class="input"  list="allGuideMessage" type="text" id="inputTextBox" placeholder="点击进行辅助输入"></input>
             <button class="sendButton" id="sendButton" onClick="clickSendButton()">发送</button>
         </div>
     </div>
@@ -227,7 +227,7 @@
         }
         
         function enterInputMode() {
-            window.scrollTo(0,0);
+            //window.scrollTo(0,0);
         }
         
         function outInputMode() {
