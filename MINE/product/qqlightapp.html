@@ -247,8 +247,8 @@
         	device.send({
         	    datapoint: [{
         	        id: 500001,
-        	        apiName: 'click_switch',
-        	        type: 'bytearray',
+        	        apiName: 'set_data_point',
+        	        type: 'int32',
         	        value: 1
         	    }],
         	    vibrate: 1,
@@ -382,7 +382,7 @@
         		device.send({
                     datapoint: [{
                         id: 500002,
-                        apiName: 'delay_switch',
+                        apiName: 'set_data_point',
                         type: 'bytearray',
                         value: [time,state]
                     }],
@@ -408,7 +408,7 @@
             device.send({
                 datapoint: [{
                     id: 500004,
-                    apiName: 'breath_light_switch',
+                    apiName: 'set_data_point',
                     type: 'int32',
                     value: state
                 }],
@@ -424,6 +424,9 @@
         }
         
         function sendOnTimeSwitchMessage( value ) {
+        	value = value.replace( "明早", "明天早上" );
+        	value = value.replace( "明晚", "明天晚上" );
+        	//alert(value);
         	var posTimeStringBegin = value.indexOf( "下午" );
 
             var add12 = false;
@@ -441,6 +444,16 @@
                     posTimeStringBegin = value.indexOf( "早晨" );
                 }
             } 
+        	
+        	var repeatTime = 1;
+        	if ( value.indexOf( "明天" ) > 0  ) {
+        		repeatTime = 1;
+        	}
+        	
+        	if ( value.indexOf( "每天" ) > 0 ) {
+                repeatTime = -1;
+            }
+        	
         	//alert( posTimeStringBegin );
         	if ( posTimeStringBegin >= 0 ) {
         		posTimeStringBegin = posTimeStringBegin + 2;
@@ -463,20 +476,24 @@
         	
         	var timeString = value.substring(posTimeStringBegin,posTimeStringEnd);
         	//alert( posTimeStringBegin + "," +  posTimeStringEnd +  "," + timeString );
-        	var midStringPos = timeString.indexOf( "到" );
+        	
         	var timeBegin = timeString.substring(0, timeString.indexOf("点") );
         	timeBegin = changeChineseToNumber( timeBegin );
         	if ( timeBegin < 12 && add12 ) {
         		timeBegin = timeBegin + 12;
         	}
+        	var timeEnd = -1;
+        	var midStringPos = timeString.indexOf( "到" );
+        	if ( midStringPos > 0 ) {
+        		timeString = timeString.substring( midStringPos + 1, timeString.length );
+                
+        		timeEnd = timeString.substring(0, timeString.indexOf("点") );
+                timeEnd = changeChineseToNumber( timeEnd );
+                if ( timeEnd < 12 && add12 ) {
+                    timeEnd = timeEnd + 12;
+                }
+        	}
         	
-        	timeString = timeString.substring( midStringPos + 1, timeString.length );
-        	
-        	var timeEnd = timeString.substring(0, timeString.indexOf("点") );
-        	timeEnd = changeChineseToNumber( timeEnd );
-        	if ( timeEnd < 12 && add12 ) {
-        		timeEnd = timeEnd + 12;
-            }
         	
         	//alert( timeBegin + "," + timeEnd );
         	
@@ -487,9 +504,9 @@
         	device.send({
                 datapoint: [{
                     id: 500003,
-                    apiName: 'on_time_switch',
+                    apiName: 'set_data_point',
                     type: 'bytearray',
-                    value: [hour,minute,timeBegin,timeEnd,state]
+                    value: [hour,minute,timeBegin,timeEnd,repeatTime,state]
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
@@ -508,7 +525,7 @@
         }
         
         function isOnTimeSwitchMessage( value ) {
-        	var r = new RegExp("到");
+        	var r = new RegExp("到|点开|分开|点关|分关");
             return r.test( value );
         }
         
@@ -620,7 +637,7 @@
         	        device.log('onSuccess: ' + JSON.stringify(ret));
         	        ret.list.forEach(function (data) {
         	            switch (data.id) {
-        	                case 500004:
+        	                case 500010:
         	                    device.showToast(data.val_list[0].val);
         	                    if ( data.val_list[0].val == 1 ) {
         	                    	switchCurrentState = "on";
