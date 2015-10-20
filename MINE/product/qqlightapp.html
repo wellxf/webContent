@@ -110,8 +110,8 @@
         }
         
         .switchButton {
-        	width: 160px;
-        	height: 160px;
+        	width: 140px;
+        	height: 140px;
             top: 5%;
             bottom: 5%;
         	background: url(http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png) no-repeat center center;
@@ -220,7 +220,7 @@
         
         <div id="foot" >
             <datalist id="allGuideMessage">
-              <option value="半小时后关灯">
+              <option id="allGuideMessage1" value="半小时后关灯">
               <option value="关闭呼吸灯">
               <option value="打开呼吸灯">
               <option value="明早6点开灯">
@@ -251,6 +251,7 @@
         }
         
         function clickSwitchButton() {
+        	
         	var o=document.getElementById("switchButton");
         	device.send({
         	    datapoint: [{
@@ -261,7 +262,14 @@
         	    }],
         	    vibrate: 1,
         	    onSuccess: function(ret) {
-        	        device.log('onSuccess: ' + JSON.stringify(ret));
+        	    	if ( ret.charCodeAt(0) == '0x00' ) {
+        	    		head.appendChild( createReceiver("done（临时显示一下）") );
+        	    	} else if ( ret.charCodeAt(0) == '0x01' ) {
+        	    		head.appendChild( createReceiver("失败了（临时显示一下）") );
+        	    	} else {
+        	    		head.appendChild( createReceiver("返回的是不是01也不是00（临时显示一下）") );
+        	    	}
+        	    	getCurrentSwitchState();
         	    },
         	    onError: function(ret) {
         	        device.log('onError: ' + JSON.stringify(ret));
@@ -295,70 +303,19 @@
         		return Number(time);
         	}
         	
-        	if ( time == "半" ) {
-                time = 0.5;
-            } else if ( time == "一" ) {
-            	time = 1;
-            } else if ( time == "二" ) {
-                time = 2;
-            } else if ( time == "三" ) {
-                time = 3;
-            } else if ( time == "四" ) {
-                time = 4;
-            } else if ( time == "五" ) {
-                time = 5;
-            } else if ( time == "六" ) {
-                time = 6;
-            } else if ( time == "七" ) {
-                time = 7;
-            } else if ( time == "八" ) {
-                time = 8;
-            } else if ( time == "九" ) {
-                time = 9;
-            } else if ( time == "十" ) {
-                time = 10;
-            } else if ( time == "十一" ) {
-                time = 11;
-            } else if ( time == "十二" ) {
-                time = 12;
-            } else if ( time == "十三" ) {
-                time = 13;
-            } else if ( time == "十四" ) {
-                time = 14;
-            } else if ( time == "十五" ) {
-                time = 15;
-            } else if ( time == "十六" ) {
-                time = 16;
-            } else if ( time == "十七" ) {
-                time = 17;
-            } else if ( time == "十八" ) {
-                time = 18;
-            } else if ( time == "十九" ) {
-                time = 19;
-            } else if ( time == "二十" ) {
-                time = 20;
-            } else if ( time == "二十一" ) {
-                time = 21;
-            } else if ( time == "二十二" ) {
-                time = 22;
-            } else if ( time == "二十三" ) {
-                time = 23;
-            } else if ( time == "二十四" ) {
-                time = 24;
-            } else if ( time == "二十五" ) {
-                time = 25;
-            } else if ( time == "二十六" ) {
-                time = 26;
-            } else if ( time == "二十七" ) {
-                time = 27;
-            } else if ( time == "二十八" ) {
-                time = 28;
-            } else if ( time == "二十九" ) {
-                time = 29;
-            } else if ( time == "三十" ) {
-                time = 30;
-            } else {
-            	setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "晕，这个数也太大了吧，你确定不是在戏弄我？" );
+        	if (time == "半") {time = 0.5;} else if (time == "一") {time = 1;} else if (time == "二") {time = 2;} 
+        	else if (time == "三") {time = 3;} else if (time == "四") {time = 4;} else if (time == "五") {time = 5;} 
+        	else if (time == "六") {time = 6;} else if (time == "七") {time = 7;} else if (time == "八") {time = 8;} 
+        	else if (time == "九") {time = 9;} else if (time == "十") {time = 10;} else if (time == "十一") {time = 11;} 
+        	else if (time == "十二") {time = 12;} else if (time == "十三") {time = 13;} else if (time == "十四") {time = 14;} 
+        	else if (time == "十五") {time = 15;} else if (time == "十六") {time = 16;} else if (time == "十七") {time = 17;} 
+        	else if (time == "十八") {time = 18;} else if (time == "十九") {time = 19;} else if (time == "二十") {time = 20;} 
+        	else if (time == "二十一") {time = 21;} else if (time == "二十二") {time = 22;} else if (time == "二十三") {time = 23;} 
+        	else if (time == "二十四") {time = 24;} else if (time == "二十五") {time = 25;} else if (time == "二十六") {time = 26;} 
+        	else if (time == "二十七") {time = 27;} else if (time == "二十八") {time = 28;} else if (time == "二十九") {time = 29;} 
+        	else if (time == "三十") {time = 30;} 
+            else {
+            	setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "这个数也太大,我识别不了" );
             	time = -1;
             }
         	
@@ -584,7 +541,7 @@
     <script>
         device.debug=true;  
         //Could be on,off,unknown
-        switchCurrentState="unknown";
+        switchCurrentState="on";
         
         
         function createReceiver( value ) {
@@ -638,29 +595,53 @@
             return div;
         }
         
+        function setGuideMessage() {
+        	if ( switchCurrentState == "on" ) {
+        		document.getElementById("allGuideMessage1").value = "半小时后关灯";
+        	} else {
+        		document.getElementById("allGuideMessage1").value = "半小时后开灯";
+        	}
+        }
+        
+        function receiveMessage() {
+        	device.onReceive(function (data) {
+                device.log(JSON.stringify(data));
+                switch (data.id) {
+                  case 500010:
+                	  if ( data.value.charCodeAt(0) == '0x11' ) {
+                          device.log("现在灯是开的状态")
+                          switchCurrentState = "on";
+                      }  else if ( data.value.charCodeAt(0) == '0x10' ) {
+                          switchCurrentState = "off";
+                          device.log("现在开关是关闭状态")
+                      } else {
+                          switchCurrentState = "on";
+                      } 
+                    break;
+                  case 500002:
+                    // do something
+                    break;
+                }
+           });
+        }
+        
         function getCurrentSwitchState() {
-        	device.query({
-        	    list: [500010],
-        	    onSuccess: function (ret) { // 查询成功回调
-        	        device.log('onSuccess: ' + JSON.stringify(ret));
-        	        ret.list.forEach(function (data) {
-        	            switch (data.id) {
-        	                case 500010:
-        	                    device.showToast(data.val_list[0].val);
-        	                    if ( data.val_list[0].val == 1 ) {
-        	                    	switchCurrentState = "on";
-        	                    } else {
-        	                    	switchCurrentState = "off";
-        	                    	device.log("现在开关是关闭状态")
-        	                    }
-        	                    break;
-        	            }
-        	        });
-        	    },
-        	    onError: function (ret) { // 查询失败回调
-        	        device.log('onError: ' + JSON.stringify(ret));
-        	    }
-        	});
+        	device.send({
+                datapoint: [{
+                    id: 500010,
+                    apiName: 'set_data_point',
+                    type: 'int32',
+                    value: 1
+                }],
+                vibrate: 1,
+                onAck : function (ret) { 
+                    //nothing
+                    //go to receiveMessage
+                }
+            });
+        	
+        	//receiveMessage();
+        	setGuideMessage();
         }
         
         window.onload = function() {      
@@ -670,6 +651,7 @@
             
             var m1 = createReceiver("点击输入框有提示");
             head.appendChild( m1 );
+            receiveMessage();
             getCurrentSwitchState();
         };
     </script>
