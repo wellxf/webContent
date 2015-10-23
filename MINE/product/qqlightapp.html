@@ -277,7 +277,7 @@
         	    }
         	});
 
-            getCurrentSwitchState();
+            //getCurrentSwitchState();
         }
         
         function pushMessageIntoHeadPanel( type, value ) {
@@ -378,6 +378,8 @@
         	}
         	
         	timeBeginMinute = timeBeginMinute + (timeBeginHour % 1) * 60;
+        	//timeBeginHour可能是0.5
+        	timeBeginHour = parseInt( timeBeginHour );
         	
         	timeBeginMinute = timeBeginMinute + currentMinute;
         	if ( timeBeginMinute >= 60 ) {
@@ -385,9 +387,7 @@
         		timeBeginHour  = timeBeginHour + 1;
         	}
         	
-        	if ( timeBeginHour >= 1 ) {
-        		timeBeginHour = parseInt( timeBeginHour ) + currentHour;
-        	}
+        	timeBeginHour = timeBeginHour + currentHour;
 
     		if ( timeBeginHour >= 24 ) {
     			timeBeginHour = timeBeginHour % 24;
