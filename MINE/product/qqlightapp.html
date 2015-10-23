@@ -253,28 +253,31 @@
         function clickSwitchButton() {
         	
         	var o=document.getElementById("switchButton");
-        	device.send({
-        	    datapoint: [{
-        	        id: 500001,
+        	var toSendId = 500001;
+            waitingMessaegReplyID = toSendId;
+            device.send({
+                datapoint: [{
+                    id: toSendId,
         	        apiName: 'set_data_point',
         	        type: 'int32',
         	        value: 1
         	    }],
         	    vibrate: 1,
         	    onSuccess: function(ret) {
-        	    	if ( ret.charCodeAt(0) == '0x00' ) {
+        	    	if ( ret.charAt(0) == '0x00' ) {
         	    		head.appendChild( createReceiver("done（临时显示一下）") );
-        	    	} else if ( ret.charCodeAt(0) == '0x01' ) {
+        	    	} else if ( ret.charAt(0) == '0x01' ) {
         	    		head.appendChild( createReceiver("失败了（临时显示一下）") );
         	    	} else {
         	    		head.appendChild( createReceiver("返回的是不是01也不是00（临时显示一下）") );
         	    	}
-        	    	getCurrentSwitchState();
         	    },
         	    onError: function(ret) {
         	        device.log('onError: ' + JSON.stringify(ret));
         	    }
         	});
+
+            getCurrentSwitchState();
         }
         
         function pushMessageIntoHeadPanel( type, value ) {
@@ -322,45 +325,99 @@
         	return time;
         }
         
-        function sendDelayMessage( value ) {
+        function beautyMinutes( minute ) {
+        	if ( minute == 0 ) {
+        		return "00";
+        	} else {
+        		return minute.toString();
+        	}
+        }
+        function printDeviceLogFor500003( currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state ) {
+        	var deviceLog = "现在时间（" + currentHour.toString() + ":" + currentMinute.toString() + ") " ;
+
+        	if ( state == 1 ) {
+        		deviceLog = deviceLog + "开灯时间（" +　timeBeginHour.toString()　+　":" + beautyMinutes( timeBeginMinute ) + ") ";
+        		if ( timeEndHour != -1 ) {
+        			deviceLog = deviceLog + "关灯时间（" +　timeEndHour.toString()　+　":" + beautyMinutes( timeEndMinute ) + ") ";
+            	}
+        	} else {
+        		deviceLog = deviceLog + "关灯时间（" +　timeBeginHour.toString()　+　":" + beautyMinutes( timeBeginMinute ) + ") ";
+        		if ( timeEndHour != -1 ) {
+        			deviceLog = deviceLog + "开灯时间（" +　timeEndHour.toString()　+　":" + beautyMinutes( timeEndMinute ) + ") ";
+            	}
+        	}
         	
+        	deviceLog = deviceLog + " 重复次数: " + repeatTime.toString();
+        	device.log( deviceLog );
+        }
+        
+        
+        function sendDelayMessage( value ) {
+        	value = value.replace( "个小时", "小时" );
         	var pos = value.indexOf( "小时" );
-        	var time = 0;
+    		
+    		var myDate = new Date();
+        	var currentHour = myDate.getHours();
+        	var currentMinute = myDate.getMinutes();
+        	
+        	var timeBeginHour = 0;
+        	var timeBeginMinute = 0;
+        	var timeEndHour = -1;
+        	var timeEndMinute = -1;
+        	var repeatTime = 1;
+        	
         	if ( pos > 0 ) {
-        		time = value.substring( 0, pos );
-        		time = changeChineseToNumber( time );
-        		time = time * 60;
+        		timeBeginHour = value.substring( 0, pos );
+        		timeBeginHour = changeChineseToNumber( timeBeginHour );     		
         	} else {
         		pos = value.indexof( "分钟" );
         		if ( pos > 0 ) {
-        			time = value.subString( 0, pos );
-        			time = changeChineseToNumber( time );
+        			timeBeginMinute = value.subString( 0, pos );
+        			timeBeginMinute = changeChineseToNumber( time );
         		}
         	}
+        	
+        	timeBeginMinute = timeBeginMinute + (timeBeginHour % 1) * 60;
+        	
+        	timeBeginMinute = timeBeginMinute + currentMinute;
+        	if ( timeBeginMinute >= 60 ) {
+        		timeBeginMinute = timeBeginMinute - 60;
+        		timeBeginHour  = timeBeginHour + 1;
+        	}
+        	
+        	if ( timeBeginHour >= 1 ) {
+        		timeBeginHour = parseInt( timeBeginHour ) + currentHour;
+        	}
+
+    		if ( timeBeginHour >= 24 ) {
+    			timeBeginHour = timeBeginHour % 24;
+    		}
         	
         	var state = 0;
         	if ( value.indexOf( "开" ) > 0 ) {
         		state = 1;
         	}
         	
-        	if ( time > 0 ) {
-        		device.send({
-                    datapoint: [{
-                        id: 500002,
-                        apiName: 'set_data_point',
-                        type: 'bytearray',
-                        value: [time,state]
-                    }],
-                    vibrate: 1,
-                    onSuccess: function(ret) {
-                        device.log('delay_switch onSuccess: ' + JSON.stringify(ret));
-                        pushMessageIntoHeadPanel( "receiver", "好的!" );
-                    },
-                    onError: function(ret) {
-                        device.log('onError: ' + JSON.stringify(ret));
-                    }
-                });
-        	}
+        	printDeviceLogFor500003( currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state );
+
+        	var toSendId = 500003;
+        	waitingMessaegReplyID = toSendId;
+        	device.send({
+                datapoint: [{
+                    id: toSendId,
+                    apiName: 'set_data_point',
+                    type: 'bytearray',
+                    value: [currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state]
+                }],
+                vibrate: 1,
+                onSuccess: function(ret) {
+                    device.log('on_time_switch onSuccess: ');
+                    pushMessageIntoHeadPanel( "receiver", "收到!" );
+                },
+                onError: function(ret) {
+                    device.log('onError: ' + JSON.stringify(ret));
+                }
+            });
             
         }
         
@@ -370,9 +427,11 @@
             if ( posTimeStringEnd < 0 ) {
                 state = 0;
             }
+            var toSendId = 500004;
+            waitingMessaegReplyID = toSendId;
             device.send({
                 datapoint: [{
-                    id: 500004,
+                    id: toSendId,
                     apiName: 'set_data_point',
                     type: 'int32',
                     value: state
@@ -392,6 +451,11 @@
         	value = value.replace( "明早", "明天早上" );
         	value = value.replace( "明晚", "明天晚上" );
         	//alert(value);
+        	var timeBeginHour = -1;
+        	var timeBeginMinute = 0;
+        	var timeEndHour = -1;
+        	var timeEndMinute = 0;
+        	
         	var posTimeStringBegin = value.indexOf( "下午" );
 
             var add12 = false;
@@ -437,25 +501,26 @@
         	if ( posTimeStringEnd < 0 ) {
         		//不是打开，不是关，那就是开灯
                 posTimeStringEnd = value.indexOf( "开" );
+                state = 1;
             }
         	
         	var timeString = value.substring(posTimeStringBegin,posTimeStringEnd);
         	//alert( posTimeStringBegin + "," +  posTimeStringEnd +  "," + timeString );
         	
-        	var timeBegin = timeString.substring(0, timeString.indexOf("点") );
-        	timeBegin = changeChineseToNumber( timeBegin );
-        	if ( timeBegin < 12 && add12 ) {
-        		timeBegin = timeBegin + 12;
+        	timeBeginHour = timeString.substring(0, timeString.indexOf("点") );
+        	timeBeginHour = changeChineseToNumber( timeBeginHour );
+        	if ( timeBeginHour < 12 && add12 ) {
+        		timeBeginHour = timeBeginHour + 12;
         	}
-        	var timeEnd = -1;
+
         	var midStringPos = timeString.indexOf( "到" );
         	if ( midStringPos > 0 ) {
         		timeString = timeString.substring( midStringPos + 1, timeString.length );
                 
-        		timeEnd = timeString.substring(0, timeString.indexOf("点") );
-                timeEnd = changeChineseToNumber( timeEnd );
-                if ( timeEnd < 12 && add12 ) {
-                    timeEnd = timeEnd + 12;
+        		timeEndHour = timeString.substring(0, timeString.indexOf("点") );
+        		timeEndHour = changeChineseToNumber( timeEndHour );
+                if ( timeEndHour < 12 && add12 ) {
+                	timeEndHour = timeEndHour + 12;
                 }
         	}
         	
@@ -463,19 +528,23 @@
         	//alert( timeBegin + "," + timeEnd );
         	
         	var myDate = new Date();
-        	var hour = myDate.getHours();
-        	var minute = myDate.getMinutes();
+        	var currentHour = myDate.getHours();
+        	var currentMinute = myDate.getMinutes();
         	
-        	device.send({
+        	printDeviceLogFor500003( currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state );
+
+        	var toSendId = 500003;
+            waitingMessaegReplyID = toSendId;
+            device.send({
                 datapoint: [{
-                    id: 500003,
+                    id: toSendId,
                     apiName: 'set_data_point',
                     type: 'bytearray',
-                    value: [hour,minute,timeBegin,timeEnd,repeatTime,state]
+                    value: [currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state]
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
-                    device.log('on_time_switch onSuccess: ' + JSON.stringify(ret));
+                    device.log('on_time_switch onSuccess: ');
                     pushMessageIntoHeadPanel( "receiver", "收到!" );
                 },
                 onError: function(ret) {
@@ -541,8 +610,8 @@
     <script>
         device.debug=true;  
         //Could be on,off,unknown
-        switchCurrentState="on";
-        
+        switchCurrentState = "on";
+        waitingMessaegReplyID = 500010;
         
         function createReceiver( value ) {
         	var div = document.createElement("div");
@@ -605,30 +674,45 @@
         
         function receiveMessage() {
         	device.onReceive(function (data) {
-                device.log(JSON.stringify(data));
+                //device.log("enter into receiveMessage: " + JSON.stringify(data) + ", data.id = " + data.id );
                 switch (data.id) {
-                  case 500010:
-                	  if ( data.value.charCodeAt(0) == '0x11' ) {
+                    case 500010:
+                      //device.log( "data.value[0] = " + data.value[0] )
+                      if ( data.value[0] == '0x11' ) {
                           device.log("现在灯是开的状态")
                           switchCurrentState = "on";
-                      }  else if ( data.value.charCodeAt(0) == '0x10' ) {
+                      }  else if ( data.value[0] == '0x10' ) {
                           switchCurrentState = "off";
                           device.log("现在开关是关闭状态")
                       } else {
                           switchCurrentState = "on";
                       } 
+                      setGuideMessage();
                     break;
-                  case 500002:
-                    // do something
+                    case 500003:
+                        if ( waitingMessaegReplyID == data.id ) {
+                        	pushMessageIntoHeadPanel( "receiver", "收到!" );
+                        } else {
+                        	device.log( "waitingMessaegReplyID = " + waitingMessaegReplyID + ", but got: " + data.id );
+                        }
+                    break;
+                    case 500004:
+                        if ( waitingMessaegReplyID == data.id ) {
+                          pushMessageIntoHeadPanel( "receiver", "好的，我记下了!" );
+                        } else {
+                        	device.log( "waitingMessaegReplyID = " + waitingMessaegReplyID + ", but got: " + data.id );
+                        }
                     break;
                 }
            });
         }
         
         function getCurrentSwitchState() {
-        	device.send({
+        	var toSendId = 500010;
+            waitingMessaegReplyID = toSendId;
+            device.send({
                 datapoint: [{
-                    id: 500010,
+                    id: toSendId,
                     apiName: 'set_data_point',
                     type: 'int32',
                     value: 1
@@ -641,7 +725,6 @@
             });
         	
         	//receiveMessage();
-        	setGuideMessage();
         }
         
         window.onload = function() {      
