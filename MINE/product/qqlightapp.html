@@ -317,6 +317,16 @@
         	else if (time == "二十四") {time = 24;} else if (time == "二十五") {time = 25;} else if (time == "二十六") {time = 26;} 
         	else if (time == "二十七") {time = 27;} else if (time == "二十八") {time = 28;} else if (time == "二十九") {time = 29;} 
         	else if (time == "三十") {time = 30;} 
+			else if (time == "三十一") {time = 31;} else if (time == "三十二") {time = 32;} else if (time == "三十三") {time = 33;} 
+			else if (time == "三十四") {time = 34;} else if (time == "三十五") {time = 35;} else if (time == "三十六") {time = 36;} 
+			else if (time == "三十七") {time = 37;} else if (time == "三十八") {time = 38;} else if (time == "三十九") {time = 39;} 
+			else if (time == "四十") {time = 40;} else if (time == "四十一") {time = 41;} else if (time == "四十二") {time = 42;} 
+			else if (time == "四十三") {time = 43;} else if (time == "四十四") {time = 44;} else if (time == "四十五") {time = 45;} 
+			else if (time == "四十六") {time = 46;} else if (time == "四十七") {time = 47;} else if (time == "四十八") {time = 48;} 
+			else if (time == "四十九") {time = 49;} else if (time == "五十") {time = 50;} else if (time == "五十一") {time = 51;} 
+			else if (time == "五十二") {time = 52;} else if (time == "五十三") {time = 53;} else if (time == "五十四") {time =54;} 
+			else if (time == "五十五") {time = 55;} else if (time == "五十六") {time = 56;} else if (time == "五十七") {time = 57;} 
+			else if (time == "五十八") {time = 58;} else if (time == "五十九") {time = 59;} else if (time == "六十") {time = 60;} 
             else {
             	setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "这个数也太大,我识别不了" );
             	time = -1;
@@ -337,12 +347,12 @@
 
         	if ( state == 1 ) {
         		deviceLog = deviceLog + "开灯时间（" +　timeBeginHour.toString()　+　":" + beautyMinutes( timeBeginMinute ) + ") ";
-        		if ( timeEndHour != -1 ) {
+        		if ( timeEndHour != 0xFF ) {
         			deviceLog = deviceLog + "关灯时间（" +　timeEndHour.toString()　+　":" + beautyMinutes( timeEndMinute ) + ") ";
             	}
         	} else {
         		deviceLog = deviceLog + "关灯时间（" +　timeBeginHour.toString()　+　":" + beautyMinutes( timeBeginMinute ) + ") ";
-        		if ( timeEndHour != -1 ) {
+        		if ( timeEndHour != 0xFF ) {
         			deviceLog = deviceLog + "开灯时间（" +　timeEndHour.toString()　+　":" + beautyMinutes( timeEndMinute ) + ") ";
             	}
         	}
@@ -362,23 +372,22 @@
         	
         	var timeBeginHour = 0;
         	var timeBeginMinute = 0;
-        	var timeEndHour = -1;
-        	var timeEndMinute = -1;
+        	var timeEndHour = 0xFF;
+        	var timeEndMinute = 0xFF;
         	var repeatTime = 1;
         	
         	if ( pos > 0 ) {
         		timeBeginHour = value.substring( 0, pos );
         		timeBeginHour = changeChineseToNumber( timeBeginHour );     		
         	} else {
-        		pos = value.indexof( "分钟" );
+        		pos = value.indexOf( "分钟" );
         		if ( pos > 0 ) {
-        			timeBeginMinute = value.subString( 0, pos );
-        			timeBeginMinute = changeChineseToNumber( time );
+        			timeBeginMinute = value.substring( 0, pos );
+        			timeBeginMinute = changeChineseToNumber( timeBeginMinute );
         		}
         	}
         	
         	timeBeginMinute = timeBeginMinute + (timeBeginHour % 1) * 60;
-        	//timeBeginHour可能是0.5
         	timeBeginHour = parseInt( timeBeginHour );
         	
         	timeBeginMinute = timeBeginMinute + currentMinute;
@@ -398,7 +407,8 @@
         		state = 1;
         	}
         	
-        	printDeviceLogFor500003( currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state );
+
+        	printDeviceLogFor500003( currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF );
 
         	var toSendId = 500003;
         	waitingMessaegReplyID = toSendId;
@@ -407,7 +417,7 @@
                     id: toSendId,
                     apiName: 'set_data_point',
                     type: 'bytearray',
-                    value: [currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state]
+                    value: [currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF]
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
@@ -531,7 +541,7 @@
         	var currentHour = myDate.getHours();
         	var currentMinute = myDate.getMinutes();
         	
-        	printDeviceLogFor500003( currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state );
+        	printDeviceLogFor500003( currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF );
 
         	var toSendId = 500003;
             waitingMessaegReplyID = toSendId;
@@ -540,7 +550,7 @@
                     id: toSendId,
                     apiName: 'set_data_point',
                     type: 'bytearray',
-                    value: [currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state]
+                    value: [currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF]
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
