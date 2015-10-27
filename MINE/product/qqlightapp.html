@@ -58,8 +58,7 @@
             padding:0px;
             over-flow: hidden;
             display:inline-block; 
-            
-            align: center;
+            vertical-align:text-top;
         }
         
         div#foot {
@@ -110,10 +109,7 @@
         }
         
         .switchButton {
-        	width: 140px;
-        	height: 140px;
-            top: 5%;
-            bottom: 5%;
+            height: 80%;
         	background: url(http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png) no-repeat center center;
         	background-size: cover;
             border-radius:80px;
@@ -215,7 +211,7 @@
         <div id="head"></div>
         
         <div id="middle">
-            <button class="switchButton" id="switchButton"  onClick="clickSwitchButton()" ></button>
+            <button class="switchButton" id="switchButton" style=""  onClick="clickSwitchButton()" ></button>
         </div>
         
         <div id="foot" >
@@ -737,9 +733,26 @@
         	//receiveMessage();
         }
         
+        function setSwitchButtonSize() {
+        	var o = document.getElementById("switchButton");
+        	var height = o.getBoundingClientRect().height;
+
+        	device.log( height );
+        	if ( parseInt(height) < 180 ) {
+        		height =  parseInt(height) * 0.95;
+        	} else if ( parseInt(height) < 130 ) {
+        		height =  parseInt(height) * 0.9;
+        	} else if ( parseInt(height) < 100 ) {
+        		height =  parseInt(height) * 0.7;
+        	}
+        	
+        	o.style.width =  height + "px";
+        	o.style.height = o.style.width;
+        }
+        
         window.onload = function() {      
             var head = document.getElementById("head");        
-            
+            setSwitchButtonSize();
             head.appendChild( createReceiver("我是主卧灯，您可以直接发信息给我。") );
             
             var m1 = createReceiver("点击输入框有提示");
