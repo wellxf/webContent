@@ -73,23 +73,38 @@
             min-height:40px;
         }
         
-        .input {
+        .input-select {
         	position: absolute;
+        	width: 68%; 
+        	float: left;
+        	height: 80%;
+        	
+        	border:0px;
+        	outline:0px;
+        	font-size: 16px;
+        	text-align: left;
         	left: 10px;
         	right: 6px;
         	top: 10%;
             bottom: 10%;
-        	overflow: auto;
-        	height: 80%;
-        	width: 68%;
-        	text-align: left;
-        	float: left;
-            border-style: none;
-            border-radius:4px;
-            placeholder-size: 22px;            
-            font-size: 16px;
         }
         
+        .input-input {        
+        	position: absolute;
+        	width: 60%; 
+        	height: -80%;
+        	float: left;
+        	
+        	border-style: none;
+        	font-size: 16px;
+        	text-align: left;
+        	left: 12px;
+        	right: 6px;
+        	top: 15%;
+            bottom: 18%;
+        }
+		
+		    
         .sendButton {
         	position: absolute;
         	top: 10%;
@@ -100,7 +115,6 @@
         	width: 20%;
         	text-align: center;
         	float: right;
-            border-radius:4px;
             background-color: #FFF;
             border-style: none;
             border-radius:4px;
@@ -202,7 +216,8 @@
             position: relative;
             right:-10px;
             top:2px;
-        }       
+        } 
+   
     </style>
 </head>
 
@@ -214,17 +229,17 @@
             <button class="switchButton" id="switchButton" style=""  onClick="clickSwitchButton()" ></button>
         </div>
         
-        <div id="foot" >
-            <datalist id="allGuideMessage">
-              <option id="allGuideMessage1" value="半小时后关灯">
-              <option value="关闭呼吸灯">
-              <option value="打开呼吸灯">
-              <option value="明早6点开灯">
-              <option value="晚上6点到8点开灯">
-              <option value="12点关灯">
-              <option value="胡说八戒">
-            </datalist>
-            <input class="input"  list="allGuideMessage" type="text" id="inputTextBox" placeholder="点击进行辅助输入" oninput="inputTextChange()"></input>
+        <div id="foot" >     
+            <select  class="input-select"  id="inputTextSelect" onchange="setInputTextBoxValueAccordingtoSelect(this)" oninput="inputTextChange()">
+				<option id="allGuideMessage1" value="半小时后关灯">
+				<option value="关闭呼吸灯">关闭呼吸灯</option>
+				<option value="打开呼吸灯">打开呼吸灯</option>
+				<option value="明早6点开灯">明早6点开灯</option>
+				<option value="晚上6点到8点开灯">晚上6点到8点开灯</option>
+				<option value="12点关灯">12点关灯</option>
+				<option value="胡说八戒">胡说八戒</option>
+			</select>
+			<input class="input-input" id="inputTextBox" placeholder="点击进行辅助输入" oninput="inputTextChange()" onClick="inputFieldOnClick()"/>
             <button class="sendButton" id="sendButton" disabled="disabled" onClick="clickSendButton()">发送</button>
         </div>
     </div>
@@ -232,6 +247,22 @@
         function clickLine(obj) {
             document.getElementById("inputTextBox").value = obj;
             document.getElementById( "sendButton" ).removeAttribute("disabled");
+        }
+        
+        function setInputTextBoxValueAccordingtoSelect(obj) {
+        	obj.nextElementSibling.value = obj.value;
+        	inputTextChange();
+        }
+        
+        function inputFieldOnClick() {
+        	var obj = document.getElementById("inputTextBox");
+        	if ( obj.value.length == 0 ) {
+        		var o = document.getElementById("inputTextSelect");
+        		var event;
+        	    event = document.createEvent('MouseEvents');
+        	    event.initMouseEvent('mousedown', true, true, window);
+        	    o.dispatchEvent(event);
+        	}
         }
         
         function inputTextChange() {
