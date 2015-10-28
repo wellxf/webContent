@@ -231,13 +231,15 @@
         
         <div id="foot" >     
             <select  class="input-select"  id="inputTextSelect" onchange="setInputTextBoxValueAccordingtoSelect(this)" oninput="inputTextChange()">
-				<option id="allGuideMessage1" value="半小时后关灯">
+				<option id="allGuideMessage1" value="半小时后关灯">半小时后关灯</option>
 				<option value="关闭呼吸灯">关闭呼吸灯</option>
-				<option value="打开呼吸灯">打开呼吸灯</option>
 				<option value="明早6点开灯">明早6点开灯</option>
 				<option value="晚上6点到8点开灯">晚上6点到8点开灯</option>
 				<option value="12点关灯">12点关灯</option>
-				<option value="胡说八戒">胡说八戒</option>
+				<option value="明天晚上12点关灯">明天晚上12点关灯</option>
+				<option value="明早5点开灯">明早5点开灯</option>
+				<option value="每天6点到7点开灯">每天6点到7点开灯</option>
+				<option value="每天晚上6点到12点开灯">每天晚上6点到12点开灯</option>
 			</select>
 			<input class="input-input" id="inputTextBox" placeholder="点击进行辅助输入" oninput="inputTextChange()" onClick="inputFieldOnClick()"/>
             <button class="sendButton" id="sendButton" disabled="disabled" onClick="clickSendButton()">发送</button>
@@ -384,7 +386,12 @@
             	}
         	}
         	
-        	deviceLog = deviceLog + " 重复次数: " + repeatTime.toString();
+        	if ( repeatTime == 0xFF ) {
+        		deviceLog = deviceLog + " 重复次数: -1 (表示无限)";
+        	} else {
+        		deviceLog = deviceLog + " 重复次数: " + repeatTime.toString();
+        	}
+        	
         	device.log( deviceLog );
         }
         
@@ -496,6 +503,7 @@
         	var posTimeStringBegin = value.indexOf( "下午" );
 
             var add12 = false;
+            var containMonitorOrAfternoon = false;
         	if ( posTimeStringBegin < 0 ) {
         		posTimeStringBegin = value.indexOf( "晚上" );
         	}
@@ -512,20 +520,33 @@
             } 
         	
         	var repeatTime = 1;
-        	if ( value.indexOf( "明天" ) > 0  ) {
-        		repeatTime = 1;
+        	if ( value.indexOf( "明天" ) >= 0  ) {
+        		repeatTime = 1;        		
         	}
         	
-        	if ( value.indexOf( "每天" ) > 0 ) {
+        	if ( value.indexOf( "每天" ) >= 0 ) {
                 repeatTime = -1;
             }
         	
         	//alert( posTimeStringBegin );
         	if ( posTimeStringBegin >= 0 ) {
+        		//这个containMonitorOrAfternoon后面用来判断12点开灯这种情况
+        		containMonitorOrAfternoon = true;
+        		//这里+2是为了越过早上、晚上等字符
         		posTimeStringBegin = posTimeStringBegin + 2;
         	} else {
-        		//没写下午什么什么，直接就是几点到几点
-        		posTimeStringBegin = 0;
+        		//没写下午什么什么，直接就是几点到几点 或是明天几点到几点 或是每天几点到几点
+        		posTimeStringBegin = value.indexOf( "明天" );
+        		if ( posTimeStringBegin < 0 ) {
+                    posTimeStringBegin = value.indexOf( "每天" );
+                }
+        		if (  posTimeStringBegin < 0 ) {
+					//明天、每天、上下午、晚上、早晨都没有，就是几点到几点
+            		posTimeStringBegin = 0;
+        		} else {
+        			//这是为了越过明天和每天这两个字符
+        			posTimeStringBegin = posTimeStringBegin + 2;
+        		}
         	}
         	
         	var posTimeStringEnd = value.indexOf( "打开" );
@@ -546,27 +567,46 @@
         	
         	timeBeginHour = timeString.substring(0, timeString.indexOf("点") );
         	timeBeginHour = changeChineseToNumber( timeBeginHour );
-        	if ( timeBeginHour < 12 && add12 ) {
-        		timeBeginHour = timeBeginHour + 12;
-        	}
-
+        	
+        	//////////////////////////////////////////////////////
+        	// 获取当前时间，当前时间在解析十二点关灯这样的语句的时候用来判断是不是意思是24点  ///
+        	//////////////////////////////////////////////////////
+        	
+        	var myDate = new Date();
+        	var currentHour = myDate.getHours();
+        	var currentMinute = myDate.getMinutes();
+        	
         	var midStringPos = timeString.indexOf( "到" );
         	if ( midStringPos > 0 ) {
         		timeString = timeString.substring( midStringPos + 1, timeString.length );
                 
         		timeEndHour = timeString.substring(0, timeString.indexOf("点") );
         		timeEndHour = changeChineseToNumber( timeEndHour );
-                if ( timeEndHour < 12 && add12 ) {
+                if ( timeEndHour <= 12 && add12 ) {
                 	timeEndHour = timeEndHour + 12;
                 }
+        	} else {
+        		//这不是几点到几点这样的语句，那么这就是十二点开灯这样的语句
+        		if ( timeBeginHour <= 12 && currentHour >=12 && (!containMonitorOrAfternoon) ) {
+        			add12 = true;
+        		}
+        	}
+        	
+        	if ( timeBeginHour <= 12 && add12 ) {
+        		timeBeginHour = timeBeginHour + 12;
+        	}
+        	
+        	if ( timeBeginHour == 24 ) {
+        		timeBeginHour = 0;
+        	}
+	
+        	if ( timeEndHour == 24 ) {
+        		timeEndHour = 0;
         	}
         	
         	
         	//alert( timeBegin + "," + timeEnd );
         	
-        	var myDate = new Date();
-        	var currentHour = myDate.getHours();
-        	var currentMinute = myDate.getMinutes();
         	
         	printDeviceLogFor500003( currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF );
 
