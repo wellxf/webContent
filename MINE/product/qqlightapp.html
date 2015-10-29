@@ -237,6 +237,8 @@
 				<option value="晚上6点到8点开灯">晚上6点到8点开灯</option>
 				<option value="12点关灯">12点关灯</option>
 				<option value="明天晚上12点关灯">明天晚上12点关灯</option>
+				<option value="后天11点关灯">后天11点关灯</option>
+				<option value="后天下午11点开灯">后天下午11点开灯</option>
 				<option value="明早5点开灯">明早5点开灯</option>
 				<option value="每天6点到7点开灯">每天6点到7点开灯</option>
 				<option value="每天晚上6点到12点开灯">每天晚上6点到12点开灯</option>
@@ -371,8 +373,8 @@
         		return minute.toString();
         	}
         }
-        function printDeviceLogFor500003( currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state ) {
-        	var deviceLog = "现在时间（" + currentHour.toString() + ":" + currentMinute.toString() + ") " ;
+        function printDeviceLogFor500003( currentYear, currentMonth, currentDate, currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state,startDayCount ) {
+        	var deviceLog = "现在时间（20" + currentYear.toString() + "年" + currentMonth.toString() + "月" + currentDate + "日 " + currentHour.toString() + ":" + currentMinute.toString() + ") " ;
 
         	if ( state == 1 ) {
         		deviceLog = deviceLog + "开灯时间（" +　timeBeginHour.toString()　+　":" + beautyMinutes( timeBeginMinute ) + ") ";
@@ -392,6 +394,13 @@
         		deviceLog = deviceLog + " 重复次数: " + repeatTime.toString();
         	}
         	
+        	if ( startDayCount == 1 ) {
+        		deviceLog = deviceLog + " 从明天开始";
+        	} else if ( startDayCount == 2 ) {
+        		deviceLog = deviceLog + " 从后天开始";
+        	} else if ( startDayCount != 0 ) {
+        		deviceLog = deviceLog + " startDayCount不是1也不是2，代码错误";
+        	}
         	device.log( deviceLog );
         }
         
@@ -401,6 +410,10 @@
         	var pos = value.indexOf( "小时" );
     		
     		var myDate = new Date();
+    		var currentYear = myDate.getFullYear() - 2000;
+        	var currentMonth = myDate.getMonth() + 1;
+        	var currentDate = myDate.getDate();
+    		
         	var currentHour = myDate.getHours();
         	var currentMinute = myDate.getMinutes();
         	
@@ -409,6 +422,7 @@
         	var timeEndHour = 0xFF;
         	var timeEndMinute = 0xFF;
         	var repeatTime = 1;
+        	var startDayCount = 0;
         	
         	if ( pos > 0 ) {
         		timeBeginHour = value.substring( 0, pos );
@@ -442,7 +456,7 @@
         	}
         	
 
-        	printDeviceLogFor500003( currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF );
+        	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
 
         	var toSendId = 500003;
         	waitingMessaegReplyID = toSendId;
@@ -451,7 +465,7 @@
                     id: toSendId,
                     apiName: 'set_data_point',
                     type: 'bytearray',
-                    value: [currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF]
+                    value: [currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF,currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF,startDayCount&0xFF]
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
@@ -520,11 +534,14 @@
             } 
         	
         	var repeatTime = 1;
+        	var startDayCount = 0;
         	if ( value.indexOf( "明天" ) >= 0  ) {
-        		repeatTime = 1;        		
-        	}
-        	
-        	if ( value.indexOf( "每天" ) >= 0 ) {
+        		repeatTime = 1;  
+        		startDayCount = 1;
+        	} else if ( value.indexOf( "后天" ) >= 0  ) {
+        		repeatTime = 1;  
+        		startDayCount = 2;
+        	} else if ( value.indexOf( "每天" ) >= 0 ) {
                 repeatTime = -1;
             }
         	
@@ -540,6 +557,11 @@
         		if ( posTimeStringBegin < 0 ) {
                     posTimeStringBegin = value.indexOf( "每天" );
                 }
+        		
+        		if ( posTimeStringBegin < 0 ) {
+                    posTimeStringBegin = value.indexOf( "后天" );
+                }
+        		
         		if (  posTimeStringBegin < 0 ) {
 					//明天、每天、上下午、晚上、早晨都没有，就是几点到几点
             		posTimeStringBegin = 0;
@@ -573,6 +595,9 @@
         	//////////////////////////////////////////////////////
         	
         	var myDate = new Date();
+        	var currentYear = myDate.getFullYear() - 2000;
+        	var currentMonth = myDate.getMonth() + 1;
+        	var currentDate = myDate.getDate();
         	var currentHour = myDate.getHours();
         	var currentMinute = myDate.getMinutes();
         	
@@ -589,6 +614,11 @@
         		//这不是几点到几点这样的语句，那么这就是十二点开灯这样的语句
         		if ( timeBeginHour <= 12 && currentHour >=12 && (!containMonitorOrAfternoon) ) {
         			add12 = true;
+        		}
+        		
+        		if ( startDayCount > 0 && (!containMonitorOrAfternoon) ) {
+        			//明天和后天这两种情况
+        			add12 = false;
         		}
         	}
         	
@@ -608,7 +638,7 @@
         	//alert( timeBegin + "," + timeEnd );
         	
         	
-        	printDeviceLogFor500003( currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF );
+        	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
 
         	var toSendId = 500003;
             waitingMessaegReplyID = toSendId;
@@ -617,7 +647,7 @@
                     id: toSendId,
                     apiName: 'set_data_point',
                     type: 'bytearray',
-                    value: [currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF]
+                    value: [currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF,currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF,startDayCount&0xFF]
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
@@ -631,7 +661,7 @@
         }
         
         function isDelaySwitchMessage( value ) {
-        	var r = new RegExp("后");
+        	var r = new RegExp("后开|后关");
             return r.test( value );
         }
         
