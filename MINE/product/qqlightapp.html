@@ -231,17 +231,7 @@
         
         <div id="foot" >     
             <select  class="input-select"  id="inputTextSelect" onchange="setInputTextBoxValueAccordingtoSelect(this)" oninput="inputTextChange()">
-				<option id="allGuideMessage1" value="半小时后关灯">半小时后关灯</option>
-				<option value="关闭呼吸灯">关闭呼吸灯</option>
-				<option value="明早6点开灯">明早6点开灯</option>
-				<option value="晚上6点到8点开灯">晚上6点到8点开灯</option>
-				<option value="12点关灯">12点关灯</option>
-				<option value="明天晚上12点关灯">明天晚上12点关灯</option>
-				<option value="后天11点关灯">后天11点关灯</option>
-				<option value="后天下午11点开灯">后天下午11点开灯</option>
-				<option value="明早5点开灯">明早5点开灯</option>
-				<option value="每天6点到7点开灯">每天6点到7点开灯</option>
-				<option value="每天晚上6点到12点开灯">每天晚上6点到12点开灯</option>
+
 			</select>
 			<input class="input-input" id="inputTextBox" placeholder="点击进行辅助输入" oninput="inputTextChange()" onClick="inputFieldOnClick()"/>
             <button class="sendButton" id="sendButton" disabled="disabled" onClick="clickSendButton()">发送</button>
@@ -696,19 +686,25 @@
         	o.placeholder = "点击进行辅助输入";
         	
         	var ret = inputisValid( sendValue);
-        	
+        	var validMessageSendSuccess = false;
         	if ( !inputisValid( sendValue) ) {
         		setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "我暂时理解不了您说的话" );
         	} else {
         		if ( isDelaySwitchMessage( sendValue) ) {
         			sendDelayMessage( sendValue );
+        			validMessageSendSuccess = true;
         		} else if ( isOnTimeSwitchMessage( sendValue ) ) {
         			sendOnTimeSwitchMessage( sendValue );
+        			validMessageSendSuccess = true;
         		} else if ( isBreathLightControlMessage( sendValue ) ) {
         			 sendBreathLightMessage( sendValue );
                 } else {
         			setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "我暂时理解不了您说的话，我会努力学习的。" );
         		}
+        	}
+        	
+        	if ( validMessageSendSuccess ) {
+        		addMessageIntoCookie( sendValue );
         	}
         }
     
@@ -719,6 +715,13 @@
         //Could be on,off,unknown
         switchCurrentState = "on";
         waitingMessaegReplyID = 500010;
+        sendMessageInCookie = "";
+        totalMessageSizeInCookie = 5;
+
+    	cookieKey = "wa-ou-sent-message";
+        
+	    preDefinedMessages = ["晚上6点到8点开灯","12点关灯",
+        		"后天11点关灯","明早5点开灯","每天6点到7点开灯","半小时后关灯","关闭呼吸灯","明早6点开灯"];
         
         function createReceiver( value ) {
         	var div = document.createElement("div");
@@ -832,7 +835,7 @@
             });
         	
         	//receiveMessage();
-        }
+        } 
         
         function setSwitchButtonSize() {
         	var o = document.getElementById("switchButton");
@@ -850,6 +853,92 @@
         	o.style.width =  height + "px";
         	o.style.height = o.style.width;
         }
+
+        function getCookie(name)
+        {
+	        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+	        if(arr=document.cookie.match(reg)) {
+		        return unescape(arr[2]);
+	        }
+	        else {
+		        return "";
+	        }
+        }
+        
+        function setCookie(name,value)
+        {
+	        var Days = 30;
+	        var exp = new Date();
+	        exp.setTime(exp.getTime() + Days*24*60*60*1000);
+	        document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+        }
+        
+        function addMessageIntoCookie( sendValue ) {
+        	if ( sendMessageInCookie.length == 0 ) {
+        		sendMessageInCookie = getCookie( cookieKey );
+        	}
+        	
+        	var allMessages = sendMessageInCookie.split( ";" );
+        	for ( var i = 0; i < allMessages.length; i++ ) {
+        		if ( allMessages[i] == sendValue ) {
+        			return;
+        		}
+        	}
+        	
+        	if ( allMessages.length >= totalMessageSizeInCookie ) {
+        		for ( var i = allMesssages.length - 1; i > 0 ; i-- ) {
+        			allMessages[i] = allMesssages[i-1];
+        		}
+        	}
+        	
+        	allMessages[0] = sendValue;
+        	
+        	sendMessageInCookie = "";
+        	for ( var i = 0; i < allMessages.length; i++ ) {
+        		if ( allMessages[i].length != 0 ) {
+            		sendMessageInCookie = sendMessageInCookie + allMessages[i] + ";";
+        		}
+        	}
+        	//alert( sendMessageInCookie );
+        	setCookie( cookieKey, sendMessageInCookie );
+        	setSelectOptions();
+        }
+        
+        function setSelectOptions() {
+        	var select = document.getElementById('inputTextSelect');
+        	if ( sendMessageInCookie.length == 0 ) {
+        		sendMessageInCookie = getCookie( cookieKey );
+        	}
+        	var allMessages = sendMessageInCookie.split( ";" );
+			select.innerHTML = "";
+			
+	       	
+	       	for ( var i = 0; i < allMessages.length; i++ ) {
+	       		if ( allMessages[i].length > 0 ) {
+	       			var opt = document.createElement('option');
+	        	    opt.value = allMessages[i];
+	        	    opt.innerHTML = allMessages[i];
+	        	    select.appendChild(opt);
+	       		}	       		
+	       	}
+	       	
+	       	for ( var i = 0; i< preDefinedMessages.length - allMessages.length; i++ ){
+        	    var opt = document.createElement('option');
+        	    opt.value = preDefinedMessages[i];
+        	    opt.innerHTML = preDefinedMessages[i];
+        	    select.appendChild(opt);
+        	}
+	       	
+        }
+        
+        function checkFileISSupported() {
+			// Check for the various File API support.
+			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				alert( "Great success! All the File APIs are supported." );
+			} else {
+				alert('The File APIs are not fully supported in this browser.');
+			}
+        }
         
         window.onload = function() {      
             var head = document.getElementById("head");        
@@ -860,6 +949,9 @@
             head.appendChild( m1 );
             receiveMessage();
             getCurrentSwitchState();
+            //setCookie( cookieKey, "" );
+            setSelectOptions();
+            //checkFileISSupported();
         };
     </script>
     <!--[if !IE]>|xGv00|9905a873c2f7497c0c0cd7e24cc02554<![endif]-->
