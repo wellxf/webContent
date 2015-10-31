@@ -685,6 +685,7 @@
         	o.value = "";
         	o.placeholder = "点击进行辅助输入";
         	
+        	sendValue = sendValue.replace(/\s+/g, '');
         	var ret = inputisValid( sendValue);
         	var validMessageSendSuccess = false;
         	if ( !inputisValid( sendValue) ) {
@@ -885,11 +886,15 @@
         		}
         	}
         	
-        	if ( allMessages.length >= totalMessageSizeInCookie ) {
-        		for ( var i = allMesssages.length - 1; i > 0 ; i-- ) {
-        			allMessages[i] = allMesssages[i-1];
-        		}
+
+        	var messageLength = allMessages.length;
+        	if ( messageLength >= totalMessageSizeInCookie ) {
+        		messageLength = totalMessageSizeInCookie;
         	}
+        	
+        	for ( var i = messageLength - 1; i > 0 ; i-- ) {
+    			allMessages[i] = allMessages[i-1];
+    		}
         	
         	allMessages[0] = sendValue;
         	
