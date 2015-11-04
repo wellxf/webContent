@@ -230,7 +230,7 @@
         </div>
         
         <div id="foot" >     
-            <select  class="input-select"  id="inputTextSelect" onchange="setInputTextBoxValueAccordingtoSelect(this)" onClick="setInputTextBoxValueAccordingtoSelect(this)">
+            <select  class="input-select"  id="inputTextSelect" onchange="setInputTextBoxValueAccordingtoSelect(this)" onClick="setInputTextBoxValueToFirstValue(this)">
 
 			</select>
 			<input class="input-input" id="inputTextBox" placeholder="点击进行辅助输入" oninput="inputTextChange()" onClick="inputFieldOnClick()"/>
@@ -246,6 +246,13 @@
         function setInputTextBoxValueAccordingtoSelect(obj) {
         	obj.nextElementSibling.value = obj.value;
         	inputTextChange();
+        }
+        
+        function setInputTextBoxValueToFirstValue(obj) {
+            if ( obj.nextElementSibling.value == "" ) {
+            	obj.nextElementSibling.value = obj.value;
+            	inputTextChange();
+            } 
         }
         
         function inputFieldOnClick() {
