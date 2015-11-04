@@ -699,6 +699,7 @@
         			validMessageSendSuccess = true;
         		} else if ( isBreathLightControlMessage( sendValue ) ) {
         			 sendBreathLightMessage( sendValue );
+        			 validMessageSendSuccess = true;
                 } else {
         			setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "我暂时理解不了您说的话，我会努力学习的。" );
         		}
