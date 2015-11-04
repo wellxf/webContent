@@ -847,8 +847,9 @@
         } 
         
         function setSwitchButtonSize() {
+        	var m = document.getElementById("middle");
         	var o = document.getElementById("switchButton");
-        	var height = o.getBoundingClientRect().height;
+        	var height = m.getBoundingClientRect().height * 0.8;
 
         	device.log( height );
         	if ( parseInt(height) < 180 ) {
@@ -944,15 +945,6 @@
 	       	
         }
         
-        function checkFileISSupported() {
-			// Check for the various File API support.
-			if (window.File && window.FileReader && window.FileList && window.Blob) {
-				alert( "Great success! All the File APIs are supported." );
-			} else {
-				alert('The File APIs are not fully supported in this browser.');
-			}
-        }
-        
         window.onload = function() {      
             var head = document.getElementById("head");        
             setSwitchButtonSize();
@@ -966,6 +958,12 @@
             setSelectOptions();
             //checkFileISSupported();
         };
+        
+        // Listen for orientation changes
+        window.addEventListener("orientationchange", function() {
+        	setSwitchButtonSize();
+        }, false);
+        
     </script>
     <!--[if !IE]>|xGv00|9905a873c2f7497c0c0cd7e24cc02554<![endif]-->
 </body>
