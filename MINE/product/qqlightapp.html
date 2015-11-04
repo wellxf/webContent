@@ -784,6 +784,14 @@
         
 	    preDefinedMessages = ["晚上6点到8点开灯","12点关灯",
         		"后天11点关灯","明早5点开灯","每天6点到7点开灯","半小时后关灯","关闭呼吸灯","明早6点开灯"];
+	    
+	    allDetailedTestMessages = ["打开呼吸灯","关闭呼吸灯","12点半关灯","5点半关灯","五点半关灯","21点半关灯","9点半关灯",
+	                               "晚上6点23分到8点27分开灯","晚上6点到8点27分开灯","晚上6点到8点五十七分开灯",
+	                               "晚上6点到十点五十七开灯","二十点半到零点五十七开灯","12：30到12：50关灯",
+	                               "12:30到12:50关灯","后天晚上9点到11点半开灯","半小时后关灯","一个半小时后关灯",
+	                               "两个半小时后关灯","三个半小时后关灯","一小时50分钟后开灯","一小时一分钟后开灯","明早5点开灯",
+	                               "明早5点三十分开灯","每天6点到7点开灯","每天6点20到7点50开灯","五点整开灯","晚上六点钟到8点钟开灯",
+	                               "后天晚上六点钟到8点钟开灯","每天晚上六点钟到8点钟开灯"]
         
         function createReceiver( value ) {
         	var div = document.createElement("div");
@@ -993,6 +1001,11 @@
 	        	    opt.innerHTML = allMessages[i];
 	        	    select.appendChild(opt);
 	       		}	       		
+	       	}
+	       	
+	       	if ( device.debug ) {
+	       		//调试模式有很复杂的消息
+	       		preDefinedMessages = allDetailedTestMessages;
 	       	}
 	       	
 	       	for ( var i = 0; i< preDefinedMessages.length - allMessages.length; i++ ){
