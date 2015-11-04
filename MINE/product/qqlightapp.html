@@ -1003,18 +1003,23 @@
 	       		}	       		
 	       	}
 	       	
+	       	
+	       	var toAddedPredefintedCount = preDefinedMessages.length - allMessages.length;
 	       	if ( device.debug ) {
-	       		//调试模式有很复杂的消息
-	       		preDefinedMessages = allDetailedTestMessages;
-	       	}
+                //调试模式有很复杂的消息
+                preDefinedMessages = allDetailedTestMessages;
+                toAddedPredefintedCount = preDefinedMessages.length;
+            }
+            
 	       	
-	       	for ( var i = 0; i< preDefinedMessages.length - allMessages.length; i++ ){
-        	    var opt = document.createElement('option');
-        	    opt.value = preDefinedMessages[i];
-        	    opt.innerHTML = preDefinedMessages[i];
-        	    select.appendChild(opt);
+	       	for ( var i = 0; i< toAddedPredefintedCount; i++ ){
+	       		if ( allMessages.indexOf( preDefinedMessages[i] ) <= -1 ) {
+	       			var opt = document.createElement('option');
+	                opt.value = preDefinedMessages[i];
+	                opt.innerHTML = preDefinedMessages[i];
+	                select.appendChild(opt);
+	       		}
         	}
-	       	
         }
         
         function getParameterByName(name) {
