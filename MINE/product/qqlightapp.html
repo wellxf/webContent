@@ -67,7 +67,7 @@
             width: 100%;
         	overflow: auto;
         	height: 8%;
-        	background-color: #EEEEEE;
+        	background-color: #F5F5F5;
         	clear: both;
             text-align:center;
             min-height:40px;
@@ -124,7 +124,7 @@
         
         .switchButton {
             height: 80%;
-        	background: url(http://wa-ou.com/resources/images/products/qqlightapp-switch-button.png) no-repeat center center;
+        	background: url(http://wa-ou.com/resources/images/products/qqlightapp-switch-button6.png) no-repeat center center;
         	background-size: cover;
             border-radius:80px;
             border-style:none;
@@ -143,7 +143,7 @@
         .switchButton:active {
             background-color:#67b4cf;
             border:1px inset #1d659f;
-            color:#e0ffaf;
+            color: #e0ffaf;
             padding:4px 2px 2px 4px;
             margin:1px;
             text-decoration:none;
@@ -172,7 +172,7 @@
             float: left;
         }
         .sender div:nth-of-type(2) {
-            background-color: #DDDDDD;
+            background-color: #F5F5F5;
             float: left;
             margin: 0 7px 7px 10px;
             padding: 7px 7px 7px 0px;
@@ -191,7 +191,7 @@
         }
         .receiver div:nth-of-type(2) {
             float:right;
-            background-color: #DDDDDD;
+            background-color: #F5F5F5;
             margin: 0 7px 7px 10px;
             padding: 7px 0px 7px 7px;
             border-radius:5px;
@@ -202,7 +202,7 @@
             width:0px;
             border-width:5px;
             border-style:solid;
-            border-color:transparent #DDDDDD transparent transparent;
+            border-color:transparent #F5F5F5 transparent transparent;
             position: relative;
             left:-10px;
             top:2px;
@@ -212,7 +212,7 @@
             width:0px;
             border-width:5px;
             border-style:solid;
-            border-color:transparent transparent transparent #DDDDDD;
+            border-color:transparent transparent transparent #F5F5F5;
             position: relative;
             right:-10px;
             top:2px;
@@ -885,6 +885,11 @@
                     break;
                 }
            });
+        	
+
+            device.onDeviceInfoChange = function (k) {
+            	device.log("I already capture this, so to hide off-line message");
+            };
         }
         
         function getCurrentSwitchState() {
