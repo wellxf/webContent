@@ -46,6 +46,7 @@
             height: 52%;
             border-style: solid;
             border-width: 0px 0px 1px 0px;
+            border-color: #F5F5F5;
             overflow-y: scroll
         }
         
@@ -505,6 +506,26 @@
         }
         
         
+        function sendCancelMessage( value ) {
+            var toSendId = 500002;
+            waitingMessaegReplyID = toSendId;
+            device.send({
+                datapoint: [{
+                    id: toSendId,
+                    apiName: 'set_data_point',
+                    type: 'int32',
+                    value: 1
+                }],
+                vibrate: 1,
+                onSuccess: function(ret) {
+                    device.log('cancel onSuccess: ' + JSON.stringify(ret));
+                },
+                onError: function(ret) {
+                    device.log('onError: ' + JSON.stringify(ret));
+                }
+            });
+        }
+        
         function getMinuteFromString(value) {
             var toHandled = value;
 
@@ -722,12 +743,17 @@
         }
         
         function inputisValid( value ) {
-        	var r = new RegExp("开|关|打开|关闭|开灯|关灯");
+        	var r = new RegExp("开|关|打开|关闭|开灯|关灯|取消|不要关了|不要开了|恢复|cancel");
         	return r.test( value );
         }
         
         function isBreathLightControlMessage( value ) {
             var r = new RegExp("呼吸灯");
+            return r.test( value );
+        }
+        
+        function isCancelMessage( value ) {
+        	var r = new RegExp("取消|不要关了|不要开了|恢复|cancel");
             return r.test( value );
         }
         
@@ -760,6 +786,8 @@
         		} else if ( isBreathLightControlMessage( sendValue ) ) {
         			 sendBreathLightMessage( sendValue );
         			 validMessageSendSuccess = true;
+                } else if ( isCancelMessage( sendValue ) ) {
+                    sendCancelMessage( sendValue );
                 } else {
         			setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "我暂时理解不了您说的话，我会努力学习的。" );
         		}
@@ -778,6 +806,7 @@
         switchCurrentState = "on";
         waitingMessaegReplyID = 500010;
         sendMessageInCookie = "";
+        alreadySendCancelGuideMessage = false;
         totalMessageSizeInCookie = 5;
 
     	cookieKey = "wa-ou-sent-message";
@@ -871,16 +900,34 @@
                     break;
                     case 500003:
                         if ( waitingMessaegReplyID == data.id ) {
-                        	pushMessageIntoHeadPanel( "receiver", "收到!" );
+                        	var shownMessage = "收到!";
+                        	if ( !alreadySendCancelGuideMessage ) {
+                        		shownMessage = shownMessage + "需要取消时，告诉我就可以啦。"
+                        		alreadySendCancelGuideMessage = true;
+                        	}
+                        	
+                        	pushMessageIntoHeadPanel( "receiver", shownMessage );
                         } else {
                         	device.log( "waitingMessaegReplyID = " + waitingMessaegReplyID + ", but got: " + data.id );
                         }
                     break;
                     case 500004:
                         if ( waitingMessaegReplyID == data.id ) {
-                          pushMessageIntoHeadPanel( "receiver", "好的，我记下了!" );
+                    	var shownMessage = "好的，我记下了!";
+                            if ( !alreadySendCancelGuideMessage ) {
+                                shownMessage = shownMessage + "需要取消时，告诉我就可以啦。"
+                                alreadySendCancelGuideMessage = true;
+                            }
+                            pushMessageIntoHeadPanel( "receiver", shownMessage );
                         } else {
                         	device.log( "waitingMessaegReplyID = " + waitingMessaegReplyID + ", but got: " + data.id );
+                        }
+                    break;
+                    case 500002:
+                        if ( waitingMessaegReplyID == data.id ) {
+                          pushMessageIntoHeadPanel( "receiver", "收到，已经取消了!" );
+                        } else {
+                            device.log( "waitingMessaegReplyID = " + waitingMessaegReplyID + ", but got: " + data.id );
                         }
                     break;
                 }
