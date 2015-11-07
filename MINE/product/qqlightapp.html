@@ -46,7 +46,7 @@
             height: 52%;
             border-style: solid;
             border-width: 0px 0px 1px 0px;
-            border-color: #F5F5F5;
+            border-color: #B8B8B8;
             overflow-y: scroll
         }
         
@@ -431,7 +431,12 @@
 
         	var minutePos = value.indexOf( "分钟" );
             if ( minutePos > 0 ) {
-                timeBeginMinute = value.substring( pos + 2, minutePos );
+            	if ( pos > 0 ) {
+                    timeBeginMinute = value.substring( pos + 2, minutePos );
+            	} else {
+            		//这是一分钟后关灯的情况
+                    timeBeginMinute = value.substring( 0, minutePos );
+            	}
                 timeBeginMinute = changeChineseToNumber( timeBeginMinute );
             }
         	
