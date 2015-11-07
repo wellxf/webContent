@@ -685,9 +685,12 @@
         		//这不是几点到几点这样的语句，那么这就是十二点开灯这样的语句
         		
                 timeBeginMinute = getMinuteFromString( timeString );
-        		if ( timeBeginHour <= 12 && currentHour >=12 && (!containMonitorOrAfternoon) ) {
-        			if ( currentHour < 12 + timeBeginHour || ( currentHour == 12 + timeBeginHour && currentMinute < timeBeginMinute ) ) {
-                        add12 = true;
+        		if ( timeBeginHour <= 12 && (!containMonitorOrAfternoon) ) {
+        			if ( currentHour < timeBeginHour || ( currentHour == timeBeginHour && currentMinute < timeBeginMinute ) ) {
+        				//比如现在早上4点，输入的是4点半关灯，那么应解释为早上4点半
+        			} else if ( currentHour < 12 + timeBeginHour || ( currentHour == 12 + timeBeginHour && currentMinute < timeBeginMinute ) ) {
+                        //比如现在是21点，输入的是10点或9点1分关灯，那么应解释为21点01关灯
+        				add12 = true;
         			}
         		}
         		
@@ -742,7 +745,13 @@
         
         function isOnTimeSwitchMessage( value ) {
         	var r = new RegExp("到|点开|分开|点关|分关|半关|半开");
-            return r.test( value );
+            var ret = r.test( value );
+            if ( !ret ) {
+            	var r1 = new RegExp("点|:|：");
+            	var r2 = new RegExp("开|关");
+            	ret = ( r1.test( value ) && r2.test( value ) );
+            }
+            return ret;
         }
         
         function isBreathLightControlMessage( value ) {
@@ -822,7 +831,8 @@
 	    preDefinedMessages = ["晚上6点到8点开灯","12点关灯",
         		"后天11点关灯","明早5点开灯","每天6点到7点开灯","半小时后关灯","关闭呼吸灯","明早6点开灯"];
 	    
-	    allDetailedTestMessages = ["打开呼吸灯","关闭呼吸灯","12点半关灯","5点半关灯","五点半关灯","21点半关灯","9点半关灯",
+	    allDetailedTestMessages = ["打开呼吸灯","关闭呼吸灯","8:20开灯", "8：20开灯", "8点20开灯", "8点20分开灯", "上午8点20开灯", "下午8点20开灯","晚上8点20开灯", 
+	                               "12点半关灯","5点半关灯","五点半关灯","21点半关灯","9点半关灯",
 	                               "晚上6点23分到8点27分开灯","晚上6点到8点27分开灯","晚上6点到8点五十七分开灯",
 	                               "晚上6点到十点五十七开灯","二十点半到零点五十七开灯","12：30到12：50关灯",
 	                               "12:30到12:50关灯","后天晚上9点到11点半开灯","半小时后关灯","一个半小时后关灯",
