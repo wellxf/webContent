@@ -372,8 +372,9 @@
         		return minute.toString();
         	}
         }
-        function printDeviceLogFor500003( currentYear, currentMonth, currentDate, currentHour,currentMinute,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state,startDayCount ) {
-        	var deviceLog = "现在时间（20" + currentYear.toString() + "年" + currentMonth.toString() + "月" + currentDate + "日 " + currentHour.toString() + ":" + currentMinute.toString() + ") " ;
+        function printDeviceLogFor500003( currentYear, currentMonth, currentDate, currentHour,currentMinute,currentSecond,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state,startDayCount ) {
+        	var deviceLog = "现在时间（20" + currentYear.toString() + "年" + currentMonth.toString() + "月" + currentDate + "日 " + 
+        	   currentHour.toString() + ":" + beautyMinutes( currentMinute ) + ":" + beautyMinutes( currentSecond ) + ") " ;
 
         	if ( state == 1 ) {
         		deviceLog = deviceLog + "开灯时间（" +　timeBeginHour.toString()　+　":" + beautyMinutes( timeBeginMinute ) + ") ";
@@ -416,6 +417,7 @@
     		
         	var currentHour = myDate.getHours();
         	var currentMinute = myDate.getMinutes();
+        	var currentSecond = myDate.getSeconds();
         	
         	var timeBeginHour = 0;
         	var timeBeginMinute = 0;
@@ -461,7 +463,7 @@
         	}
         	
 
-        	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
+        	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF, currentMinute&0xFF, currentSecond&0xFF, timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
 
         	var toSendId = 500003;
         	waitingMessaegReplyID = toSendId;
@@ -470,7 +472,7 @@
                     id: toSendId,
                     apiName: 'set_data_point',
                     type: 'bytearray',
-                    value: [currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF,currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF,startDayCount&0xFF]
+                    value: [currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF,currentHour&0xFF,currentMinute&0xFF,currentSecond&0xFF, timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF,startDayCount&0xFF]
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
@@ -663,6 +665,7 @@
         	var currentDate = myDate.getDate();
         	var currentHour = myDate.getHours();
         	var currentMinute = myDate.getMinutes();
+        	var currentSecond = myDate.getSeconds();
         	
         	var midStringPos = timeString.indexOf( "到" );
         	if ( midStringPos > 0 ) {
@@ -710,7 +713,7 @@
         	//alert( timeBegin + "," + timeEnd );
         	
         	
-        	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
+        	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF,currentMinute&0xFF,currentSecond&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
 
         	var toSendId = 500003;
             waitingMessaegReplyID = toSendId;
@@ -719,7 +722,7 @@
                     id: toSendId,
                     apiName: 'set_data_point',
                     type: 'bytearray',
-                    value: [currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF,currentHour&0xFF,currentMinute&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF,startDayCount&0xFF]
+                    value: [currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF,currentHour&0xFF,currentMinute&0xFF,currentSecond&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF,startDayCount&0xFF]
                 }],
                 vibrate: 1,
                 onSuccess: function(ret) {
