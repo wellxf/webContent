@@ -127,7 +127,7 @@
             height: 80%;
         	background: url(http://wa-ou.com/resources/images/products/qqlightapp-switch-button.jpg) no-repeat center center;
         	background-size: cover;
-            border-radius:80px;
+            border-radius:400px;
             border-style:none;
         }
         
@@ -138,7 +138,7 @@
             padding:3px 3px 3px 3px;
             margin:1px;
             text-decoration:none;
-            border-radius:80px;
+            border-radius:400px;
         }
         
         .switchButton:active {
@@ -680,6 +680,17 @@
         		
                 if ( timeEndHour <= 12 && add12 ) {
                 	timeEndHour = timeEndHour + 12;
+                } else if ( startDayCount < 1 ) {
+                	//这只是今天或明天的定时，如果是后天或是每天，必须采用24小时制
+                	if ( timeBeginHour <= 12 && (!containMonitorOrAfternoon) ) {
+                        if ( currentHour < timeBeginHour || ( currentHour == timeBeginHour && currentMinute < timeBeginMinute ) ) {
+                            //比如现在早上4点，输入的是4点半关灯，那么应解释为早上4点半
+                        } else if ( currentHour < 12 + timeBeginHour || ( currentHour == 12 + timeBeginHour && currentMinute < timeBeginMinute ) ) {
+                            //比如现在是21点，输入的是10点或9点1分关灯，那么应解释为21点01关灯
+                            add12 = true;
+                            timeEndHour = timeEndHour + 12;
+                        }
+                    }
                 }
         	} else {
         		//这不是几点到几点这样的语句，那么这就是十二点开灯这样的语句
