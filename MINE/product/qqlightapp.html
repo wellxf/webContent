@@ -372,39 +372,7 @@
         		return minute.toString();
         	}
         }
-        function printDeviceLogFor500003( currentYear, currentMonth, currentDate, currentHour,currentMinute,currentSecond,timeBeginHour,timeBeginMinute,timeEndHour,timeEndMinute,repeatTime,state,startDayCount ) {
-        	var deviceLog = "现在时间（20" + currentYear.toString() + "年" + currentMonth.toString() + "月" + currentDate + "日 " + 
-        	   currentHour.toString() + ":" + beautyMinutes( currentMinute ) + ":" + beautyMinutes( currentSecond ) + ") " ;
-
-        	if ( state == 1 ) {
-        		deviceLog = deviceLog + "开灯时间（" +　timeBeginHour.toString()　+　":" + beautyMinutes( timeBeginMinute ) + ") ";
-        		if ( timeEndHour != 0xFF ) {
-        			deviceLog = deviceLog + "关灯时间（" +　timeEndHour.toString()　+　":" + beautyMinutes( timeEndMinute ) + ") ";
-            	}
-        	} else {
-        		deviceLog = deviceLog + "关灯时间（" +　timeBeginHour.toString()　+　":" + beautyMinutes( timeBeginMinute ) + ") ";
-        		if ( timeEndHour != 0xFF ) {
-        			deviceLog = deviceLog + "开灯时间（" +　timeEndHour.toString()　+　":" + beautyMinutes( timeEndMinute ) + ") ";
-            	}
-        	}
-        	
-        	if ( repeatTime == 0xFF ) {
-        		deviceLog = deviceLog + " 重复次数: -1 (表示无限)";
-        	} else {
-        		deviceLog = deviceLog + " 重复次数: " + repeatTime.toString();
-        	}
-        	
-        	if ( startDayCount == 1 ) {
-        		deviceLog = deviceLog + " 从明天开始";
-        	} else if ( startDayCount == 2 ) {
-        		deviceLog = deviceLog + " 从后天开始";
-        	} else if ( startDayCount != 0 ) {
-        		deviceLog = deviceLog + " startDayCount不是1也不是2，代码错误";
-        	}
-        	device.log( deviceLog );
-        }
-        
-        
+           
         function sendDelayMessage( value ) {
         	value = value.replace( "个小时", "小时" );
         	value = value.replace( "个半小时", "小时30分钟" );
@@ -461,10 +429,7 @@
         	if ( value.indexOf( "开" ) > 0 ) {
         		state = 1;
         	}
-        	
-
-        	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF, currentMinute&0xFF, currentSecond&0xFF, timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
-
+ 
         	var toSendId = 500003;
         	waitingMessaegReplyID = toSendId;
         	device.send({
@@ -722,12 +687,6 @@
         	if ( timeEndHour == 24 ) {
         		timeEndHour = 0;
         	}
-        	
-        	
-        	//alert( timeBegin + "," + timeEnd );
-        	
-        	
-        	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF,currentMinute&0xFF,currentSecond&0xFF,timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
 
         	var toSendId = 500003;
             waitingMessaegReplyID = toSendId;
@@ -829,7 +788,7 @@
     </script>
     <script src="http://qzonestyle.gtimg.cn/open/mobile/light_app/js/device.js"></script>
     <script>
-        device.debug=true;  
+        device.debug=0;  
         //Could be on,off,unknown
         switchCurrentState = "on";
         waitingMessaegReplyID = 500010;
@@ -842,14 +801,7 @@
 	    preDefinedMessages = ["晚上6点到8点开灯","12点关灯",
         		"后天11点关灯","明早5点开灯","每天6点到7点开灯","半小时后关灯","关闭呼吸灯","明早6点开灯"];
 	    
-	    allDetailedTestMessages = ["打开呼吸灯","关闭呼吸灯","8:20开灯", "8：20开灯", "8点20开灯", "8点20分开灯", "上午8点20开灯", "下午8点20开灯","晚上8点20开灯", 
-	                               "12点半关灯","5点半关灯","五点半关灯","21点半关灯","9点半关灯",
-	                               "晚上6点23分到8点27分开灯","晚上6点到8点27分开灯","晚上6点到8点五十七分开灯",
-	                               "晚上6点到十点五十七开灯","二十点半到零点五十七开灯","12：30到12：50关灯",
-	                               "12:30到12:50关灯","后天晚上9点到11点半开灯","半小时后关灯","一个半小时后关灯",
-	                               "两个半小时后关灯","三个半小时后关灯","一小时50分钟后开灯","一小时一分钟后开灯","明早5点开灯",
-	                               "明早5点三十分开灯","每天6点到7点开灯","每天6点20到7点50开灯","五点整开灯","晚上六点钟到8点钟开灯",
-	                               "后天晚上六点钟到8点钟开灯","每天晚上六点钟到8点钟开灯"]
+	    allDetailedTestMessages = []
         
         function createReceiver( value ) {
         	var div = document.createElement("div");
@@ -1116,7 +1068,7 @@
             if ( deviceName == "" ) {
                 deviceName = "智能灯";
             }
-            if ( userName != "" ) {
+            if ( userName != "" && userName != "蓝牙开关" ) {
                 head.appendChild( createReceiver("您好，" + userName + "！") );
             }
             setTimeout( pushMessageIntoHeadPanel, 300, "receiver", "我是" + deviceName + "，您可以直接发信息给我。" );
