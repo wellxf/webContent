@@ -404,7 +404,7 @@
         	} else if ( startDayCount == 2 ) {
         		deviceLog = deviceLog + " 从后天开始";
         	} else if ( startDayCount != 0 ) {
-        		deviceLog = deviceLog + " startDayCount不是1也不是2，代码错误";
+        		deviceLog = deviceLog + " 从第" + startDayCount + "天开始";
         	}
         	device.log( deviceLog );
         }
@@ -465,6 +465,7 @@
         	timeBeginHour = timeBeginHour + currentHour;
 
     		if ( timeBeginHour >= 24 ) {
+                startDayCount = startDayCount + parseInt( timeBeginHour/24 );
     			timeBeginHour = timeBeginHour % 24;
     		}
         	
