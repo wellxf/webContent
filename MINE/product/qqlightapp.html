@@ -332,7 +332,9 @@
             else if (num == "两") {num = 2;}else if (num == "二") {num = 2;} 
             else if (num == "三") {num = 3;} else if (num == "四") {num = 4;} else if (num == "五") {num = 5;} 
             else if (num == "六") {num = 6;} else if (num == "七") {num = 7;} else if (num == "八") {num = 8;} 
-            else if (num == "九") {num = 9;} else if (num == "十") {num = 10;} else { num = 0;}
+            else if (num == "九") {num = 9;} else if (num == "十") {num = 10;} else { 
+            	num = -1;            	
+            }
         	
         	return num;
         }
@@ -411,6 +413,7 @@
         function sendDelayMessage( value ) {
         	value = value.replace( "个小时", "小时" );
         	value = value.replace( "个半小时", "小时30分钟" );
+        	value = value.replace( "分后", "分钟后" );
         	var pos = value.indexOf( "小时" );
     		
     		var myDate = new Date();
@@ -445,6 +448,11 @@
                 timeBeginMinute = changeChineseToNumber( timeBeginMinute );
             }
         	
+            if ( timeBeginHour < 0 || timeBeginMinute < 0 || ( timeBeginHour + timeBeginMinute == 0 ) ) {
+                setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "您设置的时间太深奥，我理解不了" );    
+                return;
+            }
+            
         	timeBeginMinute = timeBeginMinute + (timeBeginHour % 1) * 60;
         	timeBeginHour = parseInt( timeBeginHour );
         	
@@ -465,7 +473,6 @@
         		state = 1;
         	}
         	
-
         	printDeviceLogFor500003( currentYear&0xFF, currentMonth&0xFF, currentDate&0xFF, currentHour&0xFF, currentMinute&0xFF, currentSecond&0xFF, timeBeginHour&0xFF,timeBeginMinute&0xFF,timeEndHour&0xFF,timeEndMinute&0xFF,repeatTime&0xFF,state&0xFF, startDayCount&0xFF );
 
         	var toSendId = 500003;
@@ -657,6 +664,10 @@
         	
         	timeBeginHour = timeString.substring(0, timeString.indexOf("点") );
         	timeBeginHour = changeChineseToNumber( timeBeginHour );
+        	if ( timeBeginHour < 0 ) {
+                setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "您设置的时间太深奥，我理解不了" );    
+                return;
+            }
         	
         	//////////////////////////////////////////////////////
         	// 获取当前时间，当前时间在解析十二点关灯这样的语句的时候用来判断是不是意思是24点  ///
@@ -675,11 +686,16 @@
         		
                 //处理起始时间的分钟值
                 timeBeginMinute = getMinuteFromString( timeString.substring(0, midStringPos ) );
-        		
+         
         		timeString = timeString.substring( midStringPos + 1, timeString.length );
                 
         		timeEndHour = getHourFromString( timeString );
-        		timeEndMinute = getMinuteFromString( timeString );                
+        		timeEndMinute = getMinuteFromString( timeString );  
+        		
+        		if ( timeBeginMinute < 0 || timeEndHour < 0 || timeEndMinute < 0 ) {
+                    setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "您设置的时间太深奥，我理解不了" );    
+                    return;
+                }
         		
                 if ( timeEndHour <= 12 && add12 ) {
                 	timeEndHour = timeEndHour + 12;
@@ -691,7 +707,9 @@
                         } else if ( currentHour < 12 + timeBeginHour || ( currentHour == 12 + timeBeginHour && currentMinute < timeBeginMinute ) ) {
                             //比如现在是21点，输入的是10点或9点1分关灯，那么应解释为21点01关灯
                             add12 = true;
-                            timeEndHour = timeEndHour + 12;
+                            if ( timeEndHour > timeBeginHour || ( timeEndHour == timeBeginHour && timeEndMinute > timeBeginMinute ) ) {
+                            	timeEndHour = timeEndHour + 12;
+                            }
                         }
                     }
                 }
@@ -699,6 +717,10 @@
         		//这不是几点到几点这样的语句，那么这就是十二点开灯这样的语句
         		
                 timeBeginMinute = getMinuteFromString( timeString );
+                if ( timeBeginMinute < 0  ) {
+                    setTimeout( pushMessageIntoHeadPanel, 500, "receiver", "您设置的时间太深奥，我理解不了" );    
+                    return;
+                }
         		if ( timeBeginHour <= 12 && (!containMonitorOrAfternoon) ) {
         			if ( currentHour < timeBeginHour || ( currentHour == timeBeginHour && currentMinute < timeBeginMinute ) ) {
         				//比如现在早上4点，输入的是4点半关灯，那么应解释为早上4点半
@@ -845,11 +867,11 @@
 	    preDefinedMessages = ["晚上6点到8点开灯","12点关灯",
         		"后天11点关灯","明早5点开灯","每天6点到7点开灯","半小时后关灯","关闭呼吸灯","明早6点开灯"];
 	    
-	    allDetailedTestMessages = ["打开呼吸灯","关闭呼吸灯","8:20开灯", "8：20开灯", "8点20开灯", "8点20分开灯", "上午8点20开灯", "下午8点20开灯","晚上8点20开灯", 
+	    allDetailedTestMessages = ["打开呼吸灯","关闭呼吸灯","1分后关灯", "23点到1点开灯", "11点到1点开灯", "8:20开灯", "8：20开灯", "8点20开灯", "8点20分开灯", "上午8点20开灯", "下午8点20开灯","晚上8点20开灯", 
 	                               "12点半关灯","5点半关灯","五点半关灯","21点半关灯","9点半关灯",
 	                               "晚上6点23分到8点27分开灯","晚上6点到8点27分开灯","晚上6点到8点五十七分开灯",
 	                               "晚上6点到十点五十七开灯","二十点半到零点五十七开灯","12：30到12：50关灯",
-	                               "12:30到12:50关灯","后天晚上9点到11点半开灯","半小时后关灯","一个半小时后关灯",
+	                               "12:30到12:50关灯","后天晚上9点到11点半开灯","八十八分钟后关灯", "八十分钟后关灯","半小时后关灯","一个半小时后关灯",
 	                               "两个半小时后关灯","三个半小时后关灯","一小时50分钟后开灯","一小时一分钟后开灯","明早5点开灯",
 	                               "明早5点三十分开灯","每天6点到7点开灯","每天6点20到7点50开灯","五点整开灯","晚上六点钟到8点钟开灯",
 	                               "后天晚上六点钟到8点钟开灯","每天晚上六点钟到8点钟开灯"]
