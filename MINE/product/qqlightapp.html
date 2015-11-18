@@ -307,6 +307,9 @@
                 vibrate: 1,
                 onSuccess: function(ret) {
                     device.log('on_time_switch onSuccess: ');
+                    if ( !isIOS ) {
+                        pushMessageIntoHeadPanel( "receiver", "收到!" );
+                    }
                 },
                 onError: function(ret) {
                     device.log('onError: ' + JSON.stringify(ret));
@@ -589,6 +592,9 @@
                 vibrate: 1,
                 onSuccess: function(ret) {
                     device.log('on_time_switch onSuccess: ');
+                    if ( !isIOS ) {
+                        pushMessageIntoHeadPanel( "receiver", "收到!" );
+                    }
                 },
                 onError: function(ret) {
                     device.log('onError: ' + JSON.stringify(ret));
