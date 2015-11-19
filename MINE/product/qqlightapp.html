@@ -31,7 +31,7 @@
     </div>
     <script src="http://qzonestyle.gtimg.cn/open/mobile/light_app/js/device.js"></script>
     <script>
-        device.debug = !0;  
+        device.debug = 0;  
         //Could be on,off,unknown
         switchCurrentState = "on";
         waitingMessaegReplyID = 500010;
@@ -107,7 +107,9 @@
                 },
                 onError: function(ret) {
                     device.log('onError: ' + JSON.stringify(ret));
-                    pushMessageIntoHeadPanel( "receiver", ret['msg'] );
+                    if ( ret['msg'].indexOf( "频率" ) > 0 ) {
+                    	pushMessageIntoHeadPanel( "receiver", "您点得太快了哦，慢一点～" );
+                    }
                 }
             });
         }
