@@ -124,18 +124,7 @@ div#foot {
     text-decoration:none;
     border-radius:400px
 }
-.line1 {
-    position:absolute;
-    left:35px;
-    color:gray;
-    font-size:28px
-}
-.line2 {
-    position:absolute;
-    right:35px;
-    color:gray;
-    font-size:28px
-}
+
 .sender {
     clear:both;
     padding:20px 0 0
