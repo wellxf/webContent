@@ -50,8 +50,8 @@ div#foot {
     bottom:0;
     width:100%;
     overflow:auto;
-    height:8%;
-    background-color:#F5F5F5;
+    height:7%;
+    background-color:#EBECED;
     clear:both;
     text-align:center;
     min-height:40px
@@ -60,7 +60,7 @@ div#foot {
     position:absolute;
     width:68%;
     float:left;
-    height:80%;
+    height:78%;
     border:0;
     outline:0;
     font-size:16px;
@@ -68,12 +68,12 @@ div#foot {
     left:10px;
     right:6px;
     top:10%;
-    bottom:10%
+    bottom:12%
 }
 .input-input {
     position:absolute;
     width:62.8%;
-    height:-80%;
+    height:-78%;
     float:left;
     border-style:none;
     font-size:16px;
@@ -81,15 +81,15 @@ div#foot {
     left:10px;
     right:6px;
     top:10%;
-    bottom:10%
+    bottom:12%
 }
 .sendButton {
     position:absolute;
-    top:12%;
+    top:10%;
     bottom:12%;
     right:10px;
     overflow:auto;
-    height:76%;
+    height:78%;
     width:20%;
     text-align:center;
     float:right;
