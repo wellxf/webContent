@@ -135,9 +135,9 @@ div#foot {
 .sender div:nth-of-type(2) {
     background-color:#F5F5F5;
     float:left;
-    margin:0 7px 7px 10px;
+    margin:0 7px 7px 7px;
     padding:7px 7px 7px 0;
-    border-radius:5px;
+    border-radius:11px;
     font-size:16px
 }
 .receiver div:first-child img, .sender div:first-child img {
@@ -153,10 +153,11 @@ div#foot {
 .receiver div:nth-of-type(2) {
     float:right;
     background-color:#02A7E3;
-    margin:0 7px 7px 10px;
+    margin:0 7px 7px 7px;
     padding:7px 0 7px 7px;
-    border-radius:5px;
-    font-size:16px
+    border-radius:11px;
+    font-size:16px;
+    color:#F5F5F5
 }
 .left_triangle {
     height:0;
